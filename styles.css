@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Josefin Sans', sans-serif;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  overflow: hidden;
+  margin: 0;
+}
+
+header {
+  background-color: #fffb92;
+  font-family: inherited
+  margin-top: 20px;
+  padding: 5px 0;
+  text-align: center;
+}
+
+footer {
+  font-size: 1rem;
+  background-color: #fffb92;
+  color: #808080;
+  text-align: center;
+  padding: 5px 0;
+}
+
+#container {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  width: 100%;
+  /* height: 100%; */
+  /* background: #333; */
+}
+
+.play-area {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 40rem;
+  height: auto;
+  margin 0 auto;
+  padding: 10px;
+  position: relative;
+  /* background-color: red; */
+  align-items: center;
+}
+
+.card {
+  flex-direction: row;
+  text-align: center;
+  border-radius: 10px;
+  background-color: #e2e2e2;
+  height: 15rem;
+  width: 50%; /**/
+  margin: 15px;
+  position: relative;
+}
+
+@media (max-width: 1024px) {
+  h1 {
+    font-size: 4rem;
+  }
+  .play-area {
+    width: 100vw;
+  }
+
+  .card {
+    height: 20rem;
+    width: 50%; /**/
+  }
+
+  .card h2{
+    font-size: 3rem;
+  }
+
+  footer {
+    font-size: 1.5rem;
+  }
+}
