@@ -1,2 +1,2 @@
-# rock_paper_scissors
-A Rock Paper Scissors card game
+# Rock Paper Scissors
+## A new take on the classic card game War, with Rock Paper Scissors.

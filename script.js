@@ -5,11 +5,9 @@ const newDeck = [];
 const playerDecks =[[],[]];
 
 function createDeck() {
-  const [rock, paper, scissors] = ["Rock", "Paper", "Scissors"];
+  const classes = ['Rock', 'Paper', 'Scissors'];
   for(let i = 0; i < 12; i++) {
-    newDeck.push(rock);
-    newDeck.push(paper);
-    newDeck.push(scissors);
+    newDeck.push(...classes); 
   }
   shuffleDeck(newDeck);
 }
@@ -46,7 +44,5 @@ function distributeCards(newDeck) {
   addCard(p1[0]);
   addCard(p2[0]);
 }
-
-
 
 createDeck();
