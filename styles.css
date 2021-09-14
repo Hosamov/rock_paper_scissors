@@ -10,7 +10,7 @@ body {
   align-items: center;
   justify-content: center;
   height: 100vh;
-  overflow: hidden;
+  /* overflow: hidden; */
   margin: 0;
 }
 
@@ -53,7 +53,8 @@ footer {
   align-items: center;
 }
 
-.card {
+.player-card {
+  border: 3px dashed red;
   flex-direction: row;
   text-align: center;
   border-radius: 10px;
@@ -63,6 +64,35 @@ footer {
   margin: 15px;
   position: relative;
 }
+
+.ai-card {
+  border: 3px dashed blue;
+  flex-direction: row;
+  text-align: center;
+  border-radius: 10px;
+  background-color: #e2e2e2;
+  height: 15rem;
+  width: 50%; /**/
+  margin: 15px;
+  position: relative;
+}
+
+.ui {
+  /* text-align: center; */
+  display: flex;
+  background-color: lightblue;
+  font-size: 1.8rem;
+}
+
+.ui-player {
+  padding: 10px 10px;
+}
+
+.ui-computer {
+  padding: 10px 10px;
+}
+
+/* TODO: Add animations for cards/decks */
 
 @media (max-width: 1024px) {
   h1 {
