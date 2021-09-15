@@ -54,27 +54,48 @@ footer {
 }
 
 .player-card {
-  border: 3px dashed blue;
+  /* background-image: url(./images/card_hand_paper.png);
+  background-size: 200px 300px;
+  background-repeat: no-repeat; */
+  /* border: 3px dashed blue; */
   flex-direction: row;
   text-align: center;
   border-radius: 10px;
-  background-color: #e2e2e2;
-  height: 15rem;
+  /* background-color: #e2e2e2; */
+  height: 300px;
   width: 50%; /**/
   margin: 15px;
   position: relative;
 }
 
+.player-card img {
+  max-width: 200px;
+  max-height: 300px;
+  border: 2px dashed blue;
+  border-radius: 5%;
+}
+
+.player-card:hover {
+  opacity: 0.33;
+}
+
 .ai-card {
-  border: 3px dashed red;
+  /* border: 3px dashed red; */
   flex-direction: row;
   text-align: center;
   border-radius: 10px;
-  background-color: #e2e2e2;
-  height: 15rem;
+  /* background-color: #e2e2e2; */
+  height: 300px;
   width: 50%; /**/
   margin: 15px;
   position: relative;
+}
+
+.ai-card img {
+  max-width: 200px;
+  max-height: 300px;
+  border: 2px dashed red;
+  border-radius: 5%;
 }
 
 .ui {
