@@ -55,8 +55,12 @@ function uiHandler() {
 }
 
 function addUpdateCard(p1ImageFront, p2ImageFront) { //classes: ai-card, player-card
-  playArea.innerHTML = ''; //First, clear the play area
+
+  // TODO: Add functionality to display multiple stacked cards when WAR/tie has begun
+
+  playArea.innerHTML = ''; //Clear the play area of cards
   (!cardFlipped) ?
+  // initially display back of card:
   playArea.insertAdjacentHTML('beforeend', `
     <div class="ai-card">
       <img src="${cardImageBack}">
@@ -99,16 +103,14 @@ function runGameInstance(p1Card, p2Card) {
         if(p2Card === device.win) {
           console.log('You win! ' + device.device + ' beats ' + device.win);
           tieHandler(p1);
-          gameUpdateHandler(p1, p2, device.device);
-          // gameUpdateHandler(p1, p2, device.device, device.device);
+          gameUpdateHandler(p1, p2, device.device, device.win);
         } else if(p2Card === device.lose) {
           console.log('You lost... ' + device.device + ' loses to ' + device.lose);
           tieHandler(p2);
-          gameUpdateHandler(p2, p1, device.device);
-          // gameUpdateHandler(p2, p1, device.device, device.device);
+          gameUpdateHandler(p2, p1, device.device); //p2 takes only 3 args
         } else { // Begin War...
           //TODO: Write code for tie state...
-            // Continue drawing until one player draws the higher card
+            // Continue drawing cards until one player draws the higher card
             //  If two of the same card exist,
               //  remove them both from the respective players
               //  add them both to tieArr for future use
@@ -127,13 +129,19 @@ function runGameInstance(p1Card, p2Card) {
 }
 
 /*
-* Take two player areas and two card values, then add/remove them from the
+* Take two player areas and two card values, then add/remove them to/from the
 * correct hand:
 */
-function gameUpdateHandler(arr1, arr2, card) {
-  arr1.push(card);
-  arr2.shift(card);
-  console.log(p1, p2);
+function gameUpdateHandler(arr1, arr2, card, losingCard) {
+  return (!losingCard) ? (
+    arr1.push(card),
+    arr2.shift(card),
+    console.log(p1, p2)
+  ) : (
+    arr1.push(losingCard), //push losing card to player
+    arr2.shift(losingCard), //remove losing card from ai
+    console.log(p1, p2)
+  );
 }
 
 function tieHandler(playerArr) {
@@ -145,6 +153,7 @@ function tieHandler(playerArr) {
 
 /*
 * Get and return the corresponding device image randomly from assets list:
+* There are 3 (three) total images to display per device.
 */
 function cardImageHandler(card) {
   for(let device of devices) {
