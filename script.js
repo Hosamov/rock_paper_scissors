@@ -1,13 +1,17 @@
 import devices from './gameLogic.js';
 const container = document.getElementById('container');
 const playArea = document.getElementById('play-area');
+const aiPlayArea = document.querySelector('.ai-play-area');
+const playerPlayArea = document.querySelector('.player-play-area');
 const uiPlayer = document.querySelector('.ui-player');
 const uiComputer = document.querySelector('.ui-computer');
 const playerCard = document.querySelector('.player-card');
 
 const newDeck = []; //init newDeck var to hold all card values before dispersing
 const playerDecks =[[],[]];
+const cardImageBack = './images/card_back.png';
 
+let cardFlipped = false; // Globally track whether card is flipped
 let [p1, p2] = playerDecks; //p1 = human; p2 = ai
 
 /*
@@ -50,12 +54,26 @@ function uiHandler() {
   uiComputer.innerHTML += " AI: " + p2.length + " cards";
 }
 
-function addCard(card, divClass, image) { //classes: ai-card, player-card
+function addCard(p1ImageFront, p2ImageFront) { //classes: ai-card, player-card
+  playArea.innerHTML = ''; //First, clear the play area
+  (!cardFlipped) ?
   playArea.insertAdjacentHTML('beforeend', `
-    <div class="${divClass}">
-      <img src="${image}">
+    <div class="ai-card">
+      <img src="${cardImageBack}">
+    </div>
+    <div class="player-card">
+      <img src="${cardImageBack}">
+    </div>
+  `) :
+  playArea.insertAdjacentHTML('beforeend', `
+    <div class="ai-card">
+      <img src="${p2ImageFront}">
+    </div>
+    <div class="player-card">
+      <img src="${p1ImageFront}">
     </div>
   `);
+  cardFlipped = false; // Set global variable back to false for future reuse.
 }
 
 /*
@@ -63,12 +81,14 @@ function addCard(card, divClass, image) { //classes: ai-card, player-card
 * Click handler to check game logic/win state of p1 or p2
 */
 function runGameInstance(p1Card, p2Card) {
-  // Starting cards (Note the placement):
-  addCard(p2Card, 'ai-card', cardImageHandler(p2Card));
-  addCard(p1Card, 'player-card', cardImageHandler(p1Card));
+  // Add starting cards
+  addCard(cardImageHandler(p1Card), cardImageHandler(p2Card));
 
   // Test logic once game area has been clicked on by player:
   playArea.addEventListener('click', () => {
+    cardFlipped = true;
+    addCard(cardImageHandler(p1Card), cardImageHandler(p2Card)); //flip cards over
+
     devices.forEach(device => {
       if(p1Card === device.device) {
         console.log(p1);
@@ -93,7 +113,7 @@ function runGameInstance(p1Card, p2Card) {
 }
 
 /*
-* Take two player areas and two card values, then adds/removes them from the
+* Take two player areas and two card values, then add/remove them from the
 * correct hand:
 */
 function gameUpdateHandler(arr1, arr2, losingCard, winningCard) {
@@ -119,7 +139,6 @@ function cardImageHandler(card) {
 // otherwise, if opponent's card wins, opponent takes both cards. (check)
 //If both cards are the same, WAR begins:
 //play until a user wins... winner takes all cards currently in the play area.
-
 
 //TODO: Add click handler for player to start a new game (shuffle deck)
 //TODO: Add ability for Player to add their name as the current player

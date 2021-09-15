@@ -53,11 +53,19 @@ footer {
   align-items: center;
 }
 
+/* .player-play-area {
+  display: inherit;
+  flex-wrap: inherit;
+  justify-content: center;
+}
+
+.ai-play-area {
+  display: inherit;
+  flex-wrap: inherit;
+  justify-content: center;
+} */
+
 .player-card {
-  /* background-image: url(./images/card_hand_paper.png);
-  background-size: 200px 300px;
-  background-repeat: no-repeat; */
-  /* border: 3px dashed blue; */
   flex-direction: row;
   text-align: center;
   border-radius: 10px;
