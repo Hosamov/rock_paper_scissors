@@ -1,10 +1,13 @@
+import devices from './gameLogic.js';
 const container = document.getElementById('container');
 const playArea = document.getElementById('play-area');
 const uiPlayer = document.querySelector('.ui-player');
 const uiComputer = document.querySelector('.ui-computer');
+const playerCard = document.querySelector('.player-card');
 
 const newDeck = [];
 const playerDecks =[[],[]];
+
 let [p1, p2] = playerDecks; //p1 = human; p2 = ai
 let p1CardInPlay;
 let p2CardInPlay;
@@ -51,8 +54,7 @@ function dealCards(newDeck) {
   for(let i = 0; i < newDeck.length; i++) {
     playerDecks[i % 2].push(newDeck[i]); //check odd/even values, push value to respective player decks
   }
-  addAICard(p2[0]);
-  addPlayerCard(p1[0]);
+  runGameInstance(p1[0], p2[0]);
   uiHandler(p1, p2); //send array data to ui handler
 }
 
@@ -61,19 +63,41 @@ function uiHandler() {
   uiComputer.innerHTML += ": " + p2.length + " cards";
 }
 
-//TODO: Add game logic...
-//If player's card beats opponent's, player takes both cards
-// otherwise, if opponent's card wins, opponent takes both cards.
-//If both cards are the same, WAR begins:
-//play until a user wins... winner takes all cards currently in the play area.
-function runGameInstance(p1StartingCard, p2StartingCard) {
+function runGameInstance(p1Card, p2Card) {
+  // Starting cards:
+  addAICard(p2Card);
+  addPlayerCard(p1Card);
 
+  playArea.addEventListener('click', () => {
+    // console.log(p1Card);
+    testCards(p1Card, p2Card);
+  });
+
+  const testCards = (p1Card, p2Card) => {
+    // console.log(game[1].device);
+      devices.forEach(device => {
+        // console.log(device.device);
+        if(p1Card === device.device) {
+          console.log(device.device);
+        }
+      });
+
+    // if(p1Card === 'Rock' && p2Card === 'Scissors') {
+    //   console.log('Rock beats Scissors');
+    // } else if(p1Card === 'Rock' && p2Card === 'Paper') {
+    //   console.log('Paper beats Rock');
+    // } else if (p1Card === 'Rock' && p2Card === 'Rock') {
+    //   console.log('Tie');
+    // }
+  }
+  // TODO: Game logic:
+  //If player's card beats opponent's, player takes both cards
+  // otherwise, if opponent's card wins, opponent takes both cards.
+  //If both cards are the same, WAR begins:
+  //play until a user wins... winner takes all cards currently in the play area.
 }
 
-
-
 //TODO: Add click handler for player to start a new game (shuffle deck)
-
 //TODO: Add ability for Player to add their name as the current player
 //TODO: Add click handler for player to draw/play a new card
 
