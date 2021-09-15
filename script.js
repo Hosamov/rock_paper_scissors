@@ -32,21 +32,21 @@ const shuffleDeck = (array) => {
   dealCards(newDeck);
 };
 
-function addPlayerCard(card) {
+function addCard(card, image, divClass) {
   playArea.insertAdjacentHTML('beforeend', `
-    <div class="player-card">
-      <h2>${card}</h2>
+    <div class="${divClass}">
+      <img src="${image}">
     </div>
   `);
 }
 
-function addAICard(card) {
-  playArea.insertAdjacentHTML('beforeend', `
-    <div class="ai-card">
-      <h2>${card}</h2>
-    </div>
-  `);
-}
+// function addAICard(card, image) {
+//   playArea.insertAdjacentHTML('beforeend', `
+//     <div class="ai-card">
+//       <img src="${image}">
+//     </div>
+//   `);
+// }
 
 //evenly distribute randomized decks to two players:
 function dealCards(newDeck) {
@@ -64,42 +64,62 @@ function uiHandler() {
 }
 
 function runGameInstance(p1Card, p2Card) {
+  //TODO: Call a new function to get the correct images from gameLogic.js
+
   // Starting cards:
-  addAICard(p2Card);
-  addPlayerCard(p1Card);
+  addCard(p1Card, devices[0].assets[1], 'player-card');
+  addCard(p2Card, devices[0].assets[1], 'ai-card');
 
   playArea.addEventListener('click', () => {
     // console.log(p1Card);
     testCards(p1Card, p2Card);
+
+    //TODO: Fix bug that allows player to continuously click...
   });
 
   const testCards = (p1Card, p2Card) => {
-    // console.log(game[1].device);
-      devices.forEach(device => {
-        // console.log(device.device);
-        if(p1Card === device.device) {
-          console.log(device.device);
-        }
-      });
+    devices.forEach(device => {
+      if(p1Card === device.device) {
+        console.log(p1);
+        console.log(p2);
+        console.log('You drew ' + device.device);
+        if(p2Card === device.win) {
+          console.log('You win! ' + device.device + ' beats ' + device.win);
+          // updateHandler(p1, p2, device.lose, device.win);
+          updateHandler(p1, p2, device.device, device.device);
+        } else if(p2Card === device.lose) {
+          console.log('You lost... ' + device.device + ' loses to ' + device.lose);
+          updateHandler(p2, p1, device.device, device.device);
+        } else {
+          alert('Tie round.');
 
-    // if(p1Card === 'Rock' && p2Card === 'Scissors') {
-    //   console.log('Rock beats Scissors');
-    // } else if(p1Card === 'Rock' && p2Card === 'Paper') {
-    //   console.log('Paper beats Rock');
-    // } else if (p1Card === 'Rock' && p2Card === 'Rock') {
-    //   console.log('Tie');
-    // }
+          //TODO: Write code for tie state...
+            // Continue drawing until one player draws the higher card
+            // Push all cards to the winning player's array
+        }
+      }
+    });
   }
-  // TODO: Game logic:
-  //If player's card beats opponent's, player takes both cards
-  // otherwise, if opponent's card wins, opponent takes both cards.
-  //If both cards are the same, WAR begins:
-  //play until a user wins... winner takes all cards currently in the play area.
 }
+
+// TODO: Game logic:
+//If player's card beats opponent's, player takes both cards
+// otherwise, if opponent's card wins, opponent takes both cards.
+//If both cards are the same, WAR begins:
+//play until a user wins... winner takes all cards currently in the play area.
+
 
 //TODO: Add click handler for player to start a new game (shuffle deck)
 //TODO: Add ability for Player to add their name as the current player
 //TODO: Add click handler for player to draw/play a new card
+function updateHandler(arr1, arr2, losingCard, winningCard) {
+  arr1.push(winningCard);
+  arr2.shift(losingCard);
+  console.log(p1, p2);
+}
 
+function cardImageHandler(p1Card, p2Card) {
+
+}
 
 createDeck();
