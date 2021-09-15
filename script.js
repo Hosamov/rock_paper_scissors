@@ -99,11 +99,13 @@ function runGameInstance(p1Card, p2Card) {
         if(p2Card === device.win) {
           console.log('You win! ' + device.device + ' beats ' + device.win);
           tieHandler(p1);
-          gameUpdateHandler(p1, p2, device.device, device.device);
+          gameUpdateHandler(p1, p2, device.device);
+          // gameUpdateHandler(p1, p2, device.device, device.device);
         } else if(p2Card === device.lose) {
           console.log('You lost... ' + device.device + ' loses to ' + device.lose);
           tieHandler(p2);
-          gameUpdateHandler(p2, p1, device.device, device.device);
+          gameUpdateHandler(p2, p1, device.device);
+          // gameUpdateHandler(p2, p1, device.device, device.device);
         } else { // Begin War...
           //TODO: Write code for tie state...
             // Continue drawing until one player draws the higher card
@@ -128,16 +130,16 @@ function runGameInstance(p1Card, p2Card) {
 * Take two player areas and two card values, then add/remove them from the
 * correct hand:
 */
-function gameUpdateHandler(arr1, arr2, losingCard, winningCard) {
-  arr1.push(winningCard);
-  arr2.shift(losingCard);
+function gameUpdateHandler(arr1, arr2, card) {
+  arr1.push(card);
+  arr2.shift(card);
   console.log(p1, p2);
 }
 
 function tieHandler(playerArr) {
   if(tieArr.length) {
-    playerArr.push(...tieArr);
-    tieArr = [];
+    playerArr.push(...tieArr); //push all won cards to winning player's hand
+    tieArr = []; //empty the global array
   }
 }
 
