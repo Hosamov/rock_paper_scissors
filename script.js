@@ -5,23 +5,26 @@ const uiPlayer = document.querySelector('.ui-player');
 const uiComputer = document.querySelector('.ui-computer');
 const playerCard = document.querySelector('.player-card');
 
-const newDeck = [];
+const newDeck = []; //init newDeck var to hold all card values before dispersing
 const playerDecks =[[],[]];
 
 let [p1, p2] = playerDecks; //p1 = human; p2 = ai
-let p1CardInPlay;
-let p2CardInPlay;
 
+/*
+* Create a new deck with 32 cards (Game start):
+*/
 function createDeck() {
   const classes = ['Rock', 'Paper', 'Scissors'];
   for(let i = 0; i < 12; i++) {
     newDeck.push(...classes);
   }
-  shuffleDeck(newDeck);
+  shuffleDeck(newDeck); // Shuffle new deck to randomize gameplay
 }
 
-//Shuffle deck:
-//https://dev.to/codebubb/how-to-shuffle-an-array-in-javascript-2ikj
+/*
+* Shuffle deck:
+* https://dev.to/codebubb/how-to-shuffle-an-array-in-javascript-2ikj
+*/
 const shuffleDeck = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -29,20 +32,11 @@ const shuffleDeck = (array) => {
     array[i] = array[j];
     array[j] = temp;
   }
-  dealCards(newDeck);
+  dealCards(newDeck); // Deal cards out to players
 };
 
-function addCard(card, divClass, image) {
-  playArea.insertAdjacentHTML('beforeend', `
-    <div class="${divClass}">
-      <img src="${image}">
-    </div>
-  `);
-}
-
-//evenly distribute randomized decks to two players:
+// Evenly distribute randomized decks to two players:
 function dealCards(newDeck) {
-  //https://stackoverflow.com/questions/44655347/move-every-other-value-from-array-into-a-new-array
   for(let i = 0; i < newDeck.length; i++) {
     playerDecks[i % 2].push(newDeck[i]); //check odd/even values, push value to respective player decks
   }
@@ -50,16 +44,30 @@ function dealCards(newDeck) {
   uiHandler(p1, p2); //send array data to ui handler
 }
 
+// Display current cards per player:
 function uiHandler() {
-  uiPlayer.innerHTML += ": " + p1.length + " cards";
-  uiComputer.innerHTML += ": " + p2.length + " cards";
+  uiPlayer.innerHTML += " Player: " + p1.length + " cards";
+  uiComputer.innerHTML += " AI: " + p2.length + " cards";
 }
 
+function addCard(card, divClass, image) { //classes: ai-card, player-card
+  playArea.insertAdjacentHTML('beforeend', `
+    <div class="${divClass}">
+      <img src="${image}">
+    </div>
+  `);
+}
+
+/*
+* Add p1 & p2 cards to display;
+* Click handler to check game logic/win state of p1 or p2
+*/
 function runGameInstance(p1Card, p2Card) {
-  // Starting cards(note: placement - p2 on top, p1 on bottom)
+  // Starting cards (Note the placement):
   addCard(p2Card, 'ai-card', cardImageHandler(p2Card));
   addCard(p1Card, 'player-card', cardImageHandler(p1Card));
 
+  // Test logic once game area has been clicked on by player:
   playArea.addEventListener('click', () => {
     devices.forEach(device => {
       if(p1Card === device.device) {
@@ -68,11 +76,10 @@ function runGameInstance(p1Card, p2Card) {
         console.log('You drew ' + device.device);
         if(p2Card === device.win) {
           console.log('You win! ' + device.device + ' beats ' + device.win);
-          // updateHandler(p1, p2, device.lose, device.win);
-          updateHandler(p1, p2, device.device, device.device);
+          gameUpdateHandler(p1, p2, device.device, device.device);
         } else if(p2Card === device.lose) {
           console.log('You lost... ' + device.device + ' loses to ' + device.lose);
-          updateHandler(p2, p1, device.device, device.device);
+          gameUpdateHandler(p2, p1, device.device, device.device);
         } else {
           console.log('Tie round.');
           //TODO: Write code for tie state...
@@ -81,9 +88,30 @@ function runGameInstance(p1Card, p2Card) {
         }
       }
     });
-
     //TODO: Fix bug that allows player to continuously click...
   });
+}
+
+/*
+* Take two player areas and two card values, then adds/removes them from the
+* correct hand:
+*/
+function gameUpdateHandler(arr1, arr2, losingCard, winningCard) {
+  arr1.push(winningCard);
+  arr2.shift(losingCard);
+  console.log(p1, p2);
+}
+
+/*
+* Get and return the corresponding device image randomly from assets list:
+*/
+function cardImageHandler(card) {
+  for(let device of devices) {
+    const randomImage = Math.floor(Math.random() * device.assets.length);
+    if(card === device.device) {
+      return device.assets[randomImage];
+    }
+  }
 }
 
 // TODO: Game logic:
@@ -97,20 +125,4 @@ function runGameInstance(p1Card, p2Card) {
 //TODO: Add ability for Player to add their name as the current player
 //TODO: Add click handler for player to draw/play a new card
 
-function updateHandler(arr1, arr2, losingCard, winningCard) {
-  arr1.push(winningCard);
-  arr2.shift(losingCard);
-  console.log(p1, p2);
-}
-
-// Return the device image randomly from the corresponding assets array in devices
-function cardImageHandler(card) {
-  for(let device of devices) {
-    const randomImage = Math.floor(Math.random() * device.assets.length);
-    if(card === device.device) {
-      return device.assets[randomImage];
-    }
-  }
-}
-
-createDeck();
+createDeck(); // Start game
