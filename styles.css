@@ -85,6 +85,7 @@ footer {
 
 .player-card:hover {
   opacity: 0.33;
+  cursor: pointer;
 }
 
 .ai-card {
