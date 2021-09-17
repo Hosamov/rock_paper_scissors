@@ -36,8 +36,45 @@ footer {
   text-align: center;
   position: relative;
   width: 100%;
-  /* height: 100%; */
-  /* background: #333; */
+}
+
+.message {
+  position: absolute;
+  font-size: 1.5rem;
+  line-height: 1.8;
+  background-color: rgba(0,0,0,0.7);
+  color: #fff;
+  width: 100%;
+  padding: 20px;
+  z-index: 100;
+  text-align: center;
+  opacity: 0;
+  top: 20%; /*display message direct inbetween active cards*/
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 0.4s ease-in;
+}
+
+.message.visible {
+  transform: translate(-50%, 50%);
+  opacity: 1;
+}
+
+.message button {
+  cursor: pointer;
+  width: 200px;
+  height: 50px;
+  background-color: #fffb92;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 8px;
+}
+
+.message button:active {
+  background-color: #fffdc4;
+  box-shadow: 0 5px #666;
+  transform: translateY(2px);
+  outline: none;
 }
 
 .play-area {
@@ -49,27 +86,14 @@ footer {
   margin 0 auto;
   padding: 10px;
   position: relative;
-  /* background-color: red; */
   align-items: center;
 }
 
-/* .player-play-area {
-  display: inherit;
-  flex-wrap: inherit;
-  justify-content: center;
-}
-
-.ai-play-area {
-  display: inherit;
-  flex-wrap: inherit;
-  justify-content: center;
-} */
 
 .player-card {
   flex-direction: row;
   text-align: center;
   border-radius: 10px;
-  /* background-color: #e2e2e2; */
   height: 300px;
   width: 50%; /**/
   margin: 15px;
@@ -88,12 +112,15 @@ footer {
   cursor: pointer;
 }
 
+.player-card.played:hover {
+  opacity: 1;
+  cursor: auto;
+}
+
 .ai-card {
-  /* border: 3px dashed red; */
   flex-direction: row;
   text-align: center;
   border-radius: 10px;
-  /* background-color: #e2e2e2; */
   height: 300px;
   width: 50%; /**/
   margin: 15px;
@@ -108,9 +135,7 @@ footer {
 }
 
 .ui {
-  /* text-align: center; */
   display: flex;
-  /* background-color: lightblue; */
   font-size: 1.8rem;
 }
 
