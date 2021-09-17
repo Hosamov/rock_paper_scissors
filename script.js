@@ -5,6 +5,8 @@ const container = document.getElementById('container');
 const playArea = document.getElementById('play-area');
 const uiPlayer = document.querySelector('.ui-player');
 const uiComputer = document.querySelector('.ui-computer');
+// const messageEl = document.getElementById('message');
+const actionBtn = document.getElementById('action-button');
 
 //Declare global variables:
 const newDeck = []; //init newDeck var to hold all card values before dispersing
@@ -73,11 +75,26 @@ function addUpdateCard(p1ImageFront, p2ImageFront) { //classes: ai-card, player-
     <div class="ai-card">
       <img src="${p2ImageFront}">
     </div>
-    <div class="player-card">
+    <div class="player-card played">
       <img src="${p1ImageFront}">
     </div>
   `);
   cardFlipped = false; // Set global variable back to false for future reuse.
+}
+
+function addMessage() {
+  container.insertAdjacentHTML('beforeend', `
+    <div id="message" class="message">
+
+      <!-- Dynamically add win/lose/tie message here. -->
+      <!-- Dynamically add draw again button here. -->
+
+      <h4>Just some Filler text to see how this will look to users.</h4>
+      <button id="action-button">Draw Again</button>
+    </div>
+  `);
+  const messageEl = document.getElementById('message');
+  setTimeout(() => messageEl.classList.add('visible'), 800);
 }
 
 /*
@@ -91,8 +108,19 @@ function runGameInstance(p1Card, p2Card) {
 
   // Perform logic once game area has been clicked on by player:
   playerCard.addEventListener('click', () => {
+
     cardFlipped = true;
     addUpdateCard(cardImageHandler(p1Card), cardImageHandler(p2Card)); //flip cards over
+
+    //TODO: Append Win/Lose/Tie message to display
+    addMessage(); // Add message to screen...
+
+    //classList.add('visible');
+
+    /*TODO: Append a new button for user to click that will add/remove cards
+            to/from the proper array once cards are flipped.
+            Wait 1-2sec before displaying screen over opposing player's card
+    */
 
     // Loop through devices array to check cards against each other:
     devices.forEach(device => {
@@ -171,7 +199,6 @@ function cardImageHandler(card) {
   //play until a user wins... winner takes all cards currently in the play area.
 
 //TODO: Add click handler for player to start a new game (shuffle deck)
-//TODO: Add ability for Player to add their name as the current player
-//TODO: Add click handler for player to draw/play a new card
+//TODO (maybe): Add ability for Player to add their name as the current player
 
 createDeck(); // Start game
