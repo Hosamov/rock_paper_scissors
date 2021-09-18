@@ -82,19 +82,29 @@ function addUpdateCard(p1ImageFront, p2ImageFront) { //classes: ai-card, player-
   cardFlipped = false; // Set global variable back to false for future reuse.
 }
 
-function addMessage() {
+function addMessage(message, btnText, state) {
   container.insertAdjacentHTML('beforeend', `
     <div id="message" class="message">
-
-      <!-- Dynamically add win/lose/tie message here. -->
-      <!-- Dynamically add draw again button here. -->
-
-      <h4>Just some Filler text to see how this will look to users.</h4>
-      <button id="action-button">Draw Again</button>
+      <h4>${message}</h4>
+      <button id="action-button">${btnText}</button>
     </div>
   `);
+  const btnEl = document.getElementById('action-button');
   const messageEl = document.getElementById('message');
   setTimeout(() => messageEl.classList.add('visible'), 800);
+
+  switch(state) {
+    case 'draw':
+      btnEl.innerText = 'Draw again.'
+      btnEl.addEventListener('click', () => {
+        console.log('Drawing another card');
+      });
+      break;
+    case 'shuffle':
+      btnEl.innerText = 'Play again?'
+      btnEl.addEventListener('click', (e) => console.log('Shuffling deck'));
+      break;
+  }
 }
 
 /*
@@ -108,35 +118,30 @@ function runGameInstance(p1Card, p2Card) {
 
   // Perform logic once game area has been clicked on by player:
   playerCard.addEventListener('click', () => {
-
     cardFlipped = true;
     addUpdateCard(cardImageHandler(p1Card), cardImageHandler(p2Card)); //flip cards over
 
-    //TODO: Append Win/Lose/Tie message to display
-    addMessage(); // Add message to screen...
-
-    //classList.add('visible');
-
     /*TODO: Append a new button for user to click that will add/remove cards
             to/from the proper array once cards are flipped.
-            Wait 1-2sec before displaying screen over opposing player's card
+            Wait 1-2sec before displaying screen over opposing player's card (check)
     */
 
     // Loop through devices array to check cards against each other:
     devices.forEach(device => {
       if(p1Card === device.device) {
-        console.log(p1);
-        console.log(p2);
+        // console.log(p1);
+        // console.log(p2);
         console.log('You drew ' + device.device);
         if(p2Card === device.win) {
-          console.log('You win! ' + device.device + ' beats ' + device.win);
+          addMessage(`You win! ${device.device} beats ${device.win}.`, 'Draw again.', 'draw'); // Add message to screen...
           tieHandler(p1);
           gameUpdateHandler(p1, p2, device.device, device.win);
         } else if(p2Card === device.lose) {
-          console.log('You lost... ' + device.device + ' loses to ' + device.lose);
+          addMessage(`You lost. ${device.device} loses to ${device.lose}.`, 'Draw again.', 'draw'); // Add message to screen...
           tieHandler(p2);
           gameUpdateHandler(p2, p1, device.device); //p2 takes only 3 args
         } else { // Begin War...
+          addMessage(`Tie round.`, 'Draw again.', 'draw'); // Add message to screen...
           //TODO: Write code for tie state...
             // Continue drawing cards until one player draws the higher card
             //  If two of the same card exist,
