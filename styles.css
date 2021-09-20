@@ -117,6 +117,55 @@ footer {
   cursor: auto;
 }
 
+/* TODO: Animate player or ai card elements to go to bottom left or top left */
+/*When player wins:*/
+.player-card.win img {
+  /*Animate to bottom left*/
+  transition: transform 0.6s ease-in;
+  transform: translate(-250%, 45%) scale(0.0);
+}
+
+/*When player loses to AI:*/
+.player-card.lose img {
+  /*Animate to top left*/
+  border-color: red;
+  transition: transform 0.6s ease-in;
+  transform: translate(-250%, -110%) scale(0.0);
+}
+
+/*When player card ties with AI:*/
+.player-card.tie img {
+  border-color: orange;
+  transition: transform 0.6s ease-in;
+  transform: translate(-30%, -10%) scale(0.9);
+}
+
+
+/*When AI wins:*/
+.ai-card.win img {
+  /*Animate to top left*/
+  transition: transform 0.6s ease-in;
+  transform: translate(-250%, -45%) scale(0.0);
+}
+
+/*When AI loses to player:*/
+.ai-card.lose img {
+  /*Animate to bottom left*/
+  border-color: blue;
+  transition: transform 0.6s ease-in;
+  transform: translate(-250%, 100%) scale(0.0);
+}
+
+/*When AI card ties with player:*/
+.ai-card.tie img {
+  border-color: orange;
+  transition: transform 0.6s ease-in;
+  transform: translate(-30%, -10%) scale(0.9);
+}
+
+
+/******************************************/
+
 .ai-card {
   flex-direction: row;
   text-align: center;
