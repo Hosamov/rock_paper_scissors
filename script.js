@@ -4,9 +4,11 @@ import devices from './gameLogic.js';
 const container = document.getElementById('container');
 const playArea = document.getElementById('play-area');
 const uiPlayer = document.querySelector('.ui-player');
+const playerScore = document.getElementById('player-score');
+const aiScore = document.getElementById('ai-score');
+const playerTie = document.getElementById('player-tie');
+const aiTie = document.getElementById('ai-tie');
 const uiComputer = document.querySelector('.ui-computer');
-// const messageEl = document.getElementById('message');
-const actionBtn = document.getElementById('action-button');
 
 //Declare global variables:
 const newDeck = []; //init newDeck var to hold all card values before dispersing
@@ -22,7 +24,8 @@ let currentCard = 0; //iterator for current card index
  * Create a new deck with 32 cards (Game start):
  */
 function createDeck() {
-  const classes = ['Rock', 'Paper', 'Scissors'];
+  // const classes = ['Rock', 'Paper', 'Scissors'];
+  const classes = ['Rock', 'Paper'];
   for (let i = 0; i < 12; i++) {
     newDeck.push(...classes);
   }
@@ -57,8 +60,8 @@ function dealCards(newDeck) {
 
 // Display current cards per player:
 function uiHandler() {
-  uiComputer.innerHTML = `<i class="fas fa-desktop"></i> AI: ${p2.length} cards`;
-  uiPlayer.innerHTML = `<i class="fas fa-user"></i> Player: ${p1.length} cards`;
+  aiScore.innerHTML = `<i class="fas fa-desktop"></i> AI: ${p2.length} cards`;
+  playerScore.innerHTML = `<i class="fas fa-user"></i> Player: ${p1.length} cards`;
 }
 
 function addUpdateCard(p1ImageFront, p2ImageFront) { //classes: ai-card, player-card
@@ -71,7 +74,7 @@ function addUpdateCard(p1ImageFront, p2ImageFront) { //classes: ai-card, player-
 
   playArea.innerHTML = ''; //Clear the play area of existing cards
   (!cardFlipped) ?
-  // initially display back of card:
+  // Initially display back of card:
   playArea.insertAdjacentHTML('beforeend', `
     <div class="ai-card">
       <img src="${cardImageBack}">
@@ -171,22 +174,53 @@ function runGameInstance(p1Card, p2Card) {
       if (p1Card === device.device) {
         console.log('You drew ' + device.device);
         if (p2Card === device.win) {
+          tieResult('win', 'lose');
           addMessage(`You win! ${device.device} beats ${device.win}.`, 'Draw again.', 'draw', true); // Add message to screen...
           tieWinHandler(p1);
           gameUpdateHandler(p1, p2, device.device, device.win);
         } else if (p2Card === device.lose) {
+          tieResult('lose', 'win');
           addMessage(`You lost. ${device.device} loses to ${device.lose}.`, 'Draw again.', 'draw', false); // Add message to screen...
           tieWinHandler(p2);
           gameUpdateHandler(p2, p1, device.device); //p2 takes only 3 args
         } else { // Begin War...
           addMessage(`Tie round.`, 'Draw again.', 'draw'); // Add message to screen...
+
           tieArr.push(p1Card, p2Card);
-          p1.shift(0); // Remove p1's current card
-          p2.shift(0); // Remove p2's current card
+          p1.shift(0); // Remove p1's current card from their hand
+          p2.shift(0); // Remove p2's current card from their hand
+
+          const btnEl = document.getElementById('action-button');
+
+          btnEl.addEventListener('click', () => {
+            // Add card images to tie areas
+            setTimeout(() => {
+              playerTie.insertAdjacentHTML('beforeend', `
+                <img src=${device.assets[0]}>
+              `);
+              aiTie.insertAdjacentHTML('beforeend', `
+                <img src=${device.assets[0]}>
+              `);
+            }, 600);
+          })
         }
       }
     });
   });
+}
+
+// Add proper classNames then clear the tie area
+function tieResult(class1, class2) {
+  playerTie.classList.add(class1);
+  aiTie.classList.add(class2);
+  setTimeout(() => clearTied(), 2000);
+}
+
+function clearTied() {
+  playerTie.classList.remove('win', 'lose');
+  aiTie.classList.remove('win', 'lose');
+  playerTie.innerHTML = '';
+  aiTie.innerHTML = '';
 }
 
 /*
