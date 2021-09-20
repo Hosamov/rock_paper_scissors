@@ -265,12 +265,12 @@ h1 {
 
 .ui-player {
   border: 1px dashed blue;
-  /* padding: 10px 10px; */
+  padding: 3px 0;
 }
 
 .ui-computer {
   border: 1px dashed red;
-  /* padding: 10px 10px; */
+  padding: 3px 0;
 }
 
 .ai-score {
