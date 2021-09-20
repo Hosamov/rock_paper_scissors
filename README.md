@@ -28,5 +28,5 @@
     - All cards from both tie areas are dispersed to the player who drew the winning card.
     - War is over.
 
-### Game Designed by: Matt Coale (https://backyarddev.io) & Sally Coale (https://sallyscraftstudio.com)
+#### Game Designed by: Matt Coale (https://backyarddev.io) & Sally Coale (https://sallyscraftstudio.com)
 #### Report bugs to: hosamov@hotmail.com
