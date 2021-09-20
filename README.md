@@ -21,14 +21,14 @@
 4. The cards will immediately be overturned, displaying the dealt cards for both the human and AI players.
 5. A message modal will display within two (2) seconds, containing a win/lose message for the specific round, and a button the user must click to continue.
 6. Depending on the outcome of Steps 4 and 5, the cards will then behave as follows:
-  - a. The human player wins both cards currently in the play area.
-  - b. The AI player wins both cards currently in the play area.
-  - c. It's a tie round and "War" begins. Here's how War works:
-    - The tied cards are pushed to their respective "tie" areas (AI's area is directly up, human player is directly down).
-    - Player continues to draw from the main deck (clicking active card/follow Steps 3-5) until either the human or AI player draws a more powerful card.
-    - All cards from both tie areas are dispersed to the player who drew the winning card.
-    - War is over.
+    - a. The human player wins both cards currently in the play area.
+    - b. The AI player wins both cards currently in the play area.
+    - c. It's a tie round and "War" begins. Here's how War works:
+      - The tied cards are pushed to their respective "tie" areas (AI's area is directly up, human player is directly down).
+      - Player continues to draw from the main deck (clicking active card/follow Steps 3-5) until either the human or AI player draws a more powerful card.
+      - All cards from both tie areas are dispersed to the player who drew the winning card.
+      - War is over.
 7. The game ends when either player possesses all cards.
-  - A modal will appear displaying a Win/Lose message with a prompt to restart or quit the game.
+    - A modal will appear displaying a Win/Lose message with a prompt to restart or quit the game.
 
 #### Please report any bugs found. Thanks for playing!
