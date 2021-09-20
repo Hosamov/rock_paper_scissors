@@ -1,5 +1,5 @@
 # Rock Paper Scissors War
-### A new take on the classic card game War, with Rock Paper Scissors.
+### A new take on two classic games: Rock Paper Scissors, and the card game War (please see below for how to play)
 #### v0.0.2
 #### Game Designed by: Matt Coale (https://backyarddev.io) & Sally Coale (https://sallyscraftstudio.com)
 
@@ -31,4 +31,4 @@
 7. The game ends when either player possesses all cards.
   - A modal will appear displaying a Win/Lose message with a prompt to restart or quit the game.
 
-#### Report bugs to: hosamov@hotmail.com
+#### Please report any bugs found. Thanks for playing!
