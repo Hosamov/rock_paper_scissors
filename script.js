@@ -1,6 +1,6 @@
 import devices from './gameLogic.js';
 
-//DOM Elements:
+//DOM Element targets:
 const container = document.getElementById('container');
 const playArea = document.getElementById('play-area');
 const uiPlayer = document.querySelector('.ui-player');
@@ -14,29 +14,29 @@ const uiComputer = document.querySelector('.ui-computer');
 const newDeck = []; //init newDeck var to hold all card values before dispersing
 const playerDecks = [ [],[] ];
 const cardImageBack = './images/card_back.png';
-
 let tieArr = []; // Array to keep track of tied cards
-let [p1, p2] = playerDecks; //p1 = human; p2 = ai
+let [p1, p2] = playerDecks; // p1 = human player, p2 = ai player
 let cardFlipped = false; // Globally track whether card is flipped
-let currentCard = 0; //iterator for current card index
+let currentCard = 0; // Iterator for current card index
 
 /*
- * Create a new deck with 32 cards (Game start):
- */
-function createDeck() {
-  // const classes = ['Rock', 'Paper', 'Scissors'];
-  const classes = ['Rock', 'Paper'];
-  for (let i = 0; i < 12; i++) {
+* Function to create a new deck with 18, 36, or 54 cards
+* @param  {Number} num  Iterator value (9, 12, 18)
+*/
+function createDeck(num) {
+  const classes = ['Rock', 'Paper', 'Scissors'];
+  for (let i = 0; i < num; i++) {
     newDeck.push(...classes);
   }
   shuffleDeck(newDeck); // Shuffle new deck to randomize gameplay
 }
 
 /*
- * Shuffle deck:
- * https://dev.to/codebubb/how-to-shuffle-an-array-in-javascript-2ikj
+ * Function to shuffle the deck
+ * @param {array} Holds cards to shuffle
+ * @source  https://dev.to/codebubb/how-to-shuffle-an-array-in-javascript-2ikj
  */
-const shuffleDeck = (array) => {
+function shuffleDeck(array) {
   currentCard = 0; //reset index of currentCard to 0;
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -44,35 +44,33 @@ const shuffleDeck = (array) => {
     array[i] = array[j];
     array[j] = temp;
   }
-  dealCards(newDeck); // Deal cards out to players
+  dealCards(array); // fairly deal cards out to both players
 };
 
-// Evenly distribute randomized decks to each player:
+/*
+* Function that evenly distributes randomized decks to each player
+* @param {Array} newDeck  Array for newly shuffled deck
+*/
 function dealCards(newDeck) {
   for (let i = 0; i < newDeck.length; i++) {
     playerDecks[i % 2].push(newDeck[i]); //check odd/even values, push value to respective player decks
   }
 
-  runGameInstance(p1[currentCard], p2[currentCard]); // pass starting cards to p1 & p2
+  // Pass starting cards to P1 & P2
+  runGameInstance(p1[currentCard], p2[currentCard]);
   currentCard++;
   uiHandler(p1, p2); //send array data to ui handler
 }
 
-// Display current cards per player:
-function uiHandler() {
-  aiScore.innerHTML = `<i class="fas fa-desktop"></i> AI: ${p2.length} cards`;
-  playerScore.innerHTML = `<i class="fas fa-user"></i> Player: ${p1.length} cards`;
-}
-
+/*
+* Function that adds two cards (from p1 and p2's deck) to the display.
+* @param {String} p1ImageFront  Card image for P1
+* @param {String} p2ImageFront  Card image for P2
+* return Insert HTML
+*/
 function addUpdateCard(p1ImageFront, p2ImageFront) { //classes: ai-card, player-card
-
-  // TODO: Add functionality to display multiple stacked cards when WAR/tie has begun
-  // if the current round is a tie...
-    // display current cards in play
-    // notify player, prompt to draw again
-  // otherwise, the winning player collects all the cards.
-
   playArea.innerHTML = ''; //Clear the play area of existing cards
+
   (!cardFlipped) ?
   // Initially display back of card:
   playArea.insertAdjacentHTML('beforeend', `
@@ -94,7 +92,14 @@ function addUpdateCard(p1ImageFront, p2ImageFront) { //classes: ai-card, player-
   cardFlipped = false; // Set global variable back to false for future reuse.
 }
 
-// Display a win/lose message in center of screen with action button:
+/*
+* Function that displays a win/lose message in center of the screen with an
+* action button.
+* @param  {String} message  Win/lose message
+* @param  {String} btnText  Text for btnEl
+* @param  {String} state    For determining button state
+* @param  {Boolean} hasWon  Passthrough param for tracking win/lose state
+*/
 function addMessage(message, btnText, state, hasWon) {
   container.insertAdjacentHTML('beforeend', `
     <div id="message" class="message">
@@ -122,7 +127,10 @@ function addMessage(message, btnText, state, hasWon) {
   }
 }
 
-//Draw a new card
+/*
+* Function that draws a new card for each player
+* @param  {Boolean} hasWon  State of win/lose for round
+*/
 function drawCard(hasWon) {
   uiHandler();
 
@@ -142,6 +150,7 @@ function drawCard(hasWon) {
     aiCard.classList.add('tie');
   }
 
+  // Run an updated instance of the game, using each player's next card:
   setTimeout(() => {
     if(hasWon === true) playArea.innerHTML = '';
 
@@ -156,9 +165,10 @@ function drawCard(hasWon) {
 }
 
 /*
- * Add p1 & p2 cards to display;
- * Click handler to check game logic/win state of p1 or p2
- */
+* Function to run the actual game instance
+* @param  {String} p1Card  Name of P1's current card
+* @param  {String} p2Card  Name of P2's current card
+*/
 function runGameInstance(p1Card, p2Card) {
   // Add starting cards
   addUpdateCard(cardImageHandler(p1Card), cardImageHandler(p2Card));
@@ -175,25 +185,25 @@ function runGameInstance(p1Card, p2Card) {
         console.log('You drew ' + device.device);
         if (p2Card === device.win) {
           tieResult('win', 'lose');
-          addMessage(`You win! ${device.device} beats ${device.win}.`, 'Draw again.', 'draw', true); // Add message to screen...
+          addMessage(`You win! ${device.device} beats ${device.win}.`, 'Draw again.', 'draw', true);
           tieWinHandler(p1);
           gameUpdateHandler(p1, p2, device.device, device.win);
         } else if (p2Card === device.lose) {
           tieResult('lose', 'win');
-          addMessage(`You lost. ${device.device} loses to ${device.lose}.`, 'Draw again.', 'draw', false); // Add message to screen...
+          addMessage(`You lose. ${device.device} loses to ${device.lose}.`, 'Draw again.', 'draw', false);
           tieWinHandler(p2);
-          gameUpdateHandler(p2, p1, device.device); //p2 takes only 3 args
+          gameUpdateHandler(p2, p1, device.device); // Note: P2 takes only 3 args (as opposed to 4 for p1)
         } else { // Begin War...
-          addMessage(`Tie round.`, 'Draw again.', 'draw'); // Add message to screen...
+          addMessage(`Tie round.`, 'Draw again.', 'draw');
+          tieArr.push(p1Card, p2Card); //place tied cards in their own array
 
-          tieArr.push(p1Card, p2Card);
-          p1.shift(0); // Remove p1's current card from their hand
-          p2.shift(0); // Remove p2's current card from their hand
+          // Remove both P1's & P2's tied cards from their hands temporarily:
+          p1.shift(0);
+          p2.shift(0);
 
           const btnEl = document.getElementById('action-button');
-
           btnEl.addEventListener('click', () => {
-            // Add card images to tie areas
+            // Add card images to respective game tie areas
             setTimeout(() => {
               playerTie.insertAdjacentHTML('beforeend', `
                 <img src=${device.assets[0]}>
@@ -209,13 +219,23 @@ function runGameInstance(p1Card, p2Card) {
   });
 }
 
-// Add proper classNames then clear the tie area
+
+//////////////////////////HELPER FUNCTIONS//////////////////////
+
+// Display current cards per player:
+function uiHandler() {
+  aiScore.innerHTML = `<i class="fas fa-desktop"></i> AI: ${p2.length} cards`;
+  playerScore.innerHTML = `<i class="fas fa-user"></i> Player: ${p1.length} cards`;
+}
+
+// Function to add proper classNames then clear the tie area:
 function tieResult(class1, class2) {
   playerTie.classList.add(class1);
   aiTie.classList.add(class2);
   setTimeout(() => clearTied(), 2000);
 }
 
+// Function to reset tie DOM elements:
 function clearTied() {
   playerTie.classList.remove('win', 'lose');
   aiTie.classList.remove('win', 'lose');
@@ -224,9 +244,9 @@ function clearTied() {
 }
 
 /*
- * Take two player areas and two card values, then add/remove them to/from the
- * correct hand:
- */
+* Helper function that takes two player areas and two card values, then
+* add/remove in correct hand:
+*/
 function gameUpdateHandler(arr1, arr2, card, losingCard) {
   return (!losingCard) ? (
     arr1.push(card),
@@ -239,18 +259,25 @@ function gameUpdateHandler(arr1, arr2, card, losingCard) {
   );
 }
 
+/*
+* Helper function to distribute cards to the winning player
+*/
 function tieWinHandler(playerArr) {
   if (tieArr.length) {
-    playerArr.push(...tieArr); //push all won cards to winning player's hand
-    tieArr = []; //empty the global array
+    playerArr.push(...tieArr);
+    tieArr = []; //empty global array
   }
 }
 
 /*
- * Get and return the corresponding device image randomly from assets list:
- * There are 3 (three) total images to display per device.
+ * Helper function to get and return the corresponding device image randomly
+ * from assets list.
+ * Note: There are 3 (three) total images to display per device (see gameLogic.js).
  */
 function cardImageHandler(card) {
+
+  // TODO: Figure out how to make tie card the same as what's shown on the screen
+
   for (let device of devices) {
     const randomImage = Math.floor(Math.random() * device.assets.length);
     if (card === device.device) {
@@ -259,13 +286,9 @@ function cardImageHandler(card) {
   }
 }
 
-// TODO: Game logic:
-//If player's card beats opponent's, player takes both cards (check)
-// otherwise, if opponent's card wins, opponent takes both cards. (check)
-//If both cards are the same, WAR begins:
-//play until a user wins... winner takes all cards currently in the play area.
-
+//TODO: Add end game functionality (winning/losing message, 'restart game' button)
 //TODO: Add click handler for player to start a new game (shuffle deck)
-//TODO (maybe): Add ability for Player to add their name as the current player
+//TODO: Add game instructions prior to game start
 
-createDeck(); // Start game
+// Start game:
+createDeck(18); // 9, 12, 18
