@@ -1,31 +1,36 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="utf-8">
     <title>Rock Paper Scissors</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-    <header>
+    <div class="header">
       <h1>Rock Paper Scissors</h1>
-    </header>
-    <div class="ui ui-computer">
-      <div id="ai-score" class="ai-score"></div>
-      <div id="ai-tie" class="ai-tie"></div>
     </div>
-    <div id="container">
 
-      <div class="play-area" id="play-area">
+    <div id="container" class="container">
+      <div class="ui ui-computer">
+        <div id="ai-score" class="ai-score"></div>
+        <div id="ai-tie" class="ai-tie"></div>
+      </div>
+      <div class="tie-pot active">
+        Tie Pot: <br>
+        <img src="images/card_back.png" />
+        <div class="tie-pot-centered">Num</div>
+      </div>
+
+      <div class="play-area center" id="play-area">
           <!-- AI card dynamically added here -->
           <!-- Player card dynamically added here -->
       </div>
-
+      <div class='ui ui-player'>
+        <div id="player-score" class="player-score"></div>
+        <div id="player-tie" class="player-tie"></div>
+      </div>
       <!-- message container code dynamically added here -->
-    </div>
-    <div class='ui ui-player'>
-      <div id="player-score" class="player-score"></div>
-      <div id="player-tie" class="player-tie"></div>
     </div>
 
     <footer>

@@ -1,58 +1,50 @@
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap');
 
-body {
-  background-color: yellow;
-  font-family: 'Josefin Sans', sans-serif;
-  /* display: flex; */
-  /* height: 100vh; */
-  max-width: 100vw;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  overflow: hidden;
+* {
+  box-sizing: border-box;
 }
 
-.header {
-  display: block;
-  block-size: 32px;
-  /* position: absolute; */
-  left: 0px;
-  top: 0px;
+body {
+  font-family: 'Josefin Sans', sans-serif;
+  height: 100vh;
   width: 100vw;
+  align-items: center;
+  justify-content: center;
+   overflow: hidden;
+  margin: 0;
+}
+
+header {
+  background-color: #fffb92;
+  margin-top: 20px;
+  padding: 5px 0;
   text-align: center;
-  background-color: blue;
 }
 
 footer {
-  /* display: block; */
-  /* bottom: 0; */
-  /* left: 0; */
-  /* width: 100vw; */
+  font-size: 1rem;
+  background-color: #fffb92;
+  color: #808080;
   text-align: center;
-  background-color: purple;
+  padding: 5px 0;
 }
 
-.container {
-  /* position: relative; */
-  display: block;
-  background-color: green;
-  /* padding-top: 30px; */
-  width: 100vw;
-  margin: 0;
+h1 {
+  font-size: 2rem;
 }
 
-.play-area {
+#container {
+  display: flex;
+  display: inline-block;
+  justify-content: center;
+  text-align: center;
   position: relative;
-  background-color: purple;
-  width: 170px;
-  /* align-items: center;
-  justify-content: center; */
-  top: 50%;
-  left: 50%;
-  margin: 5px 0;
+  width: 100vw;
+  width: 100%;
+  height: 80vh;
+  background-color: blue;
 }
 
-/***********Message Styles************/
 .message {
   position: absolute;
   font-size: 1.5rem;
@@ -91,65 +83,34 @@ footer {
   transform: translateY(2px);
   outline: none;
 }
-/******************************/
 
+.play-area {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100vw;
+  margin 0 auto;
+  padding: 5px;
+  position: relative;
+  align-items: center;
+  background-color: red;
+}
 
-
-/* Cards: */
-/* .player-card {
-  border-radius: 15px;
-} */
+.player-card {
+  flex-direction: row;
+  text-align: center;
+  border-radius: 10px;
+  height: 300px;
+  width: 50%; /**/
+  margin: 15px;
+  position: relative;
+}
 
 .player-card img {
-  position: relative;
-  left: 9px;
-  margin-top: 10px; /*Get a little top space for P1 card*/
-  width: 150px;
-  height: 225px;
-  /* border: 2px dashed blue; */
-  border-radius: 8%;
-}
-
-/* .ai-card {
-
-} */
-
-.ai-card img {
-  transform: rotate(180deg);
-  position: relative;
-  left: 9px;
-  width: 150px;
-  height: 225px;
-  /* border: 2px dashed red; */
-  border-radius: 8%;
-}
-/*******/
-
-.tie-pot {
-  position: absolute;
-  top: 50%;
-  /* top: 43%; */
-  left: 2%;
-  float: left;
-  opacity: 0;
-}
-
-.tie-pot.active {
-  opacity: 1;
-}
-
-.tie-pot img {
-  width: 60px;
-  height: 90px;
-  border: 1px solid black;
-}
-
-/* Centered text */
-.tie-pot-centered {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  max-width: 180px;
+  max-height: 270px;
+  border: 2px dashed blue;
+  border-radius: 5%;
 }
 
 .player-card:hover {
@@ -160,6 +121,24 @@ footer {
 .player-card.played:hover {
   opacity: 1;
   cursor: auto;
+}
+
+.ai-card {
+  /* flex-direction: row; */
+  text-align: center;
+  border-radius: 10px;
+  height: 300px;
+  width: 50%; /**/
+  margin: 5px;
+  position: relative;
+  transform: rotate(180deg);
+}
+
+.ai-card img {
+  max-width: 180px;
+  max-height: 270px;
+  border: 2px dashed red;
+  border-radius: 5%;
 }
 
 /*****************WIN******************/
@@ -209,17 +188,17 @@ footer {
   transform: translate(0%, 65%) scale(0);
 }
 
-/* .player-tie {
-  flex-direction: row;
+.player-tie {
+  /* flex-direction: row; */
   text-align: center;
   border-radius: 10px;
   left: 27%;
   height: 50px;
   margin-left: 7%;
   position: relative;
-  border: 2px solid blue;
-  background-color: red;
-} */
+  /* border: 2px solid blue; */
+  /* background-color: red; */
+}
 
 .player-tie img {
   border: 2px dashed orange;
@@ -228,17 +207,18 @@ footer {
   border-radius: 10%;
 }
 
-/* .ai-tie {
-  flex-direction: row;
+.ai-tie {
+  /* flex-direction: row; */
   text-align: center;
   border-radius: 10px;
   left: 27%;
-  height: 45px;
-  max-width: 600px;
+  height: 50px;
   margin-left: 10%;
   padding: 0;
   position: relative;
-} */
+  /* border: 2px solid red; */
+  /* background-color: red; */
+}
 
 .ai-tie img {
   border: 2px dashed orange;
@@ -278,38 +258,57 @@ footer {
 }
 /****************************************/
 
-.center {
-  transform: translate(-50%);
-}
-
 .ui {
+  /* display: flex; */
   font-size: 1.8rem;
 }
 
-.ui-computer {
-  /* position: absolute; */
-  display: block;
-  block-size: 28px;
-  top: 28;
-  left: 0;
-  /* float: left; */
-  border: 1px dashed red;
-  background-color: red;
-  padding: 1px 0;
-}
-
 .ui-player {
-  display: block;
-  block-size: 28px;
-  /* float: left; */
   border: 1px dashed blue;
   padding: 3px 0;
 }
 
+.ui-computer {
+  border: 1px dashed red;
+  padding: 3px 0;
+}
+
 .ai-score {
-  /* margin-right: 10px; */
+  margin-right: 10px;
 }
 
 .player-score {
-  /* margin-right: 10px; */
+  margin-right: 10px;
+}
+
+/* MEDIA: */
+@media (max-width: 1024px) {
+
+  .play-area {
+    width: 100vw;
+  }
+
+  .card {
+    height: 20rem;
+    width: 50%;
+  }
+
+  .card h2{
+    font-size: 3rem;
+  }
+
+  footer {
+    font-size: 1.5rem;
+  }
+}
+
+
+@keyframes moveUp {
+  0% {
+    transform: translate(0,0);
+  }
+
+  100% {
+    transform: translate(250, 65);
+  }
 }

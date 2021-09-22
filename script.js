@@ -11,8 +11,8 @@ const aiTie = document.getElementById('ai-tie');
 const uiComputer = document.querySelector('.ui-computer');
 
 //Declare global variables:
-const newDeck = []; //init newDeck var to hold all card values before dispersing
-const playerDecks = [ [],[] ];
+let newDeck = []; //init newDeck var to hold all card values before dispersing
+let playerDecks = [ [],[] ];
 const cardImageBack = './images/card_back.png';
 let tieArr = []; // Array to keep track of tied cards
 let [p1, p2] = playerDecks; // p1 = human player, p2 = ai player
@@ -23,7 +23,15 @@ let currentCard = 0; // Iterator for current card index
 * Function to create a new deck with 18, 36, or 54 cards
 * @param  {Number} num  Iterator value (9, 12, 18)
 */
-function createDeck(num) {
+function createDeck(num, gameReset) {
+  if(gameReset) {
+    // Reset the global vars for a new game iteration:
+    newDeck = [];
+    playerDecks = [[],[]];
+    [p1, p2] = playerDecks;
+    currentCard = 0;
+  }
+
   const classes = ['Rock', 'Paper', 'Scissors'];
   for (let i = 0; i < num; i++) {
     newDeck.push(...classes);
@@ -107,6 +115,7 @@ function addMessage(message, btnText, state, hasWon) {
       <button id="action-button">${btnText}</button>
     </div>
   `);
+
   const btnEl = document.getElementById('action-button');
   const messageEl = document.getElementById('message');
   setTimeout(() => messageEl.classList.add('visible'), 1000);
@@ -114,15 +123,20 @@ function addMessage(message, btnText, state, hasWon) {
   //Add button functionality:
   switch(state) {
     case 'draw':
-      btnEl.innerText = 'Draw again.'
+      btnEl.innerText = btnText;
       btnEl.addEventListener('click', () => {
         drawCard(hasWon);
         container.lastElementChild.remove(); //remove message container
       });
       break;
-    case 'shuffle': // Win
-      btnEl.innerText = 'Play again?'
-      btnEl.addEventListener('click', () => console.log('Shuffling deck'));
+    case 'shuffle': // End of game
+      btnEl.innerText = btnText;
+      btnEl.addEventListener('click', () => {
+         createDeck(8, true);
+        // TODO: Figure out how to reset the game.
+        console.log('Called "Play again"');
+        container.lastElementChild.remove(); //remove message container
+      });
       break;
   }
 }
@@ -132,13 +146,15 @@ function addMessage(message, btnText, state, hasWon) {
 * @param  {Boolean} hasWon  State of win/lose for round
 */
 function drawCard(hasWon) {
-  uiHandler();
 
+  console.log(p1.length, p2.length);
+
+  uiHandler();
   // Declare variables for elements needed
   const playerCard = document.querySelector('.player-card');
   const aiCard = document.querySelector('.ai-card');
 
-  // Animate card styles based on win/lose/tie state:
+  // Animate card styles based on P1 win/lose/tie state:
   if(hasWon === true && hasWon !== null) {
     playerCard.classList.add('win');
     aiCard.classList.add('lose');
@@ -170,6 +186,10 @@ function drawCard(hasWon) {
 * @param  {String} p2Card  Name of P2's current card
 */
 function runGameInstance(p1Card, p2Card) {
+  if(p1.length === 0 || p2.length === 0) {
+    endGame();
+  }
+
   // Add starting cards
   addUpdateCard(cardImageHandler(p1Card), cardImageHandler(p2Card));
   const playerCard = document.querySelector('.player-card img');
@@ -184,13 +204,13 @@ function runGameInstance(p1Card, p2Card) {
       if (p1Card === device.device) {
         console.log('You drew ' + device.device);
         if (p2Card === device.win) {
+          addMessage(`You Won that round! ${device.device} beats ${device.win}.`, 'Draw again.', 'draw', true);
           tieResult('win', 'lose');
-          addMessage(`You win! ${device.device} beats ${device.win}.`, 'Draw again.', 'draw', true);
           tieWinHandler(p1);
           gameUpdateHandler(p1, p2, device.device, device.win);
         } else if (p2Card === device.lose) {
+          addMessage(`You lost that round. ${device.device} loses to ${device.lose}.`, 'Draw again.', 'draw', false);
           tieResult('lose', 'win');
-          addMessage(`You lose. ${device.device} loses to ${device.lose}.`, 'Draw again.', 'draw', false);
           tieWinHandler(p2);
           gameUpdateHandler(p2, p1, device.device); // Note: P2 takes only 3 args (as opposed to 4 for p1)
         } else { // Begin War...
@@ -217,6 +237,15 @@ function runGameInstance(p1Card, p2Card) {
       }
     });
   });
+}
+
+/*
+* Function to test and return end game state
+*/
+function endGame() {
+  (p2.length === 0) ?
+    addMessage('Congratulations! You have won the war!', 'Play again', 'shuffle', true) :
+    addMessage('Game over. AI has won the war. Better luck next time...', 'Play again', 'shuffle', false);
 }
 
 
@@ -275,7 +304,6 @@ function tieWinHandler(playerArr) {
  * Note: There are 3 (three) total images to display per device (see gameLogic.js).
  */
 function cardImageHandler(card) {
-
   // TODO: Figure out how to make tie card the same as what's shown on the screen
 
   for (let device of devices) {
@@ -286,9 +314,11 @@ function cardImageHandler(card) {
   }
 }
 
+
+
 //TODO: Add end game functionality (winning/losing message, 'restart game' button)
 //TODO: Add click handler for player to start a new game (shuffle deck)
 //TODO: Add game instructions prior to game start
 
 // Start game:
-createDeck(18); // 9, 12, 18
+createDeck(2); // 9, 12, 18
