@@ -35,7 +35,7 @@ h1 {
   margin: 0;
 }
 
-#content-wrap {
+.content-wrap {
   position: absolute;
   /* background-color: red; */
   width: 100vw;
@@ -44,7 +44,7 @@ h1 {
   bottom: 20px;
 }
 
-#footer {
+.footer {
   position: absolute;
   bottom: 35px;
   width: 100%;
@@ -94,6 +94,7 @@ img {
   left: 50%;
   transform: translate(-50%, -50%);
   transition: transform 0.4s ease-in;
+  z-index: 1000;
 }
 
 .message.visible {
@@ -117,9 +118,20 @@ img {
   transform: translateY(2px);
   outline: none;
 }
-/******************************/
+
+/******Player/AI Cards*******/
 .player-card {
   margin-top: 20px;
+}
+
+.player-card:hover {
+  opacity: 0.33;
+  cursor: pointer;
+}
+
+.player-card.played:hover {
+  opacity: 1;
+  cursor: auto;
 }
 
 .player-card img {
@@ -131,24 +143,31 @@ img {
   border-radius: 8%;
 }
 
-.ai-card img {
-  transform: rotate(180deg);
+/*Note: Gotta have this selector for additional translate down the road...*/
+.ai-card {
   position: relative;
-  left: 9px;
+  transform: rotate(180deg);
+}
+
+.ai-card img {
+  position: relative;
+  right: 9px;
   width: 150px;
   height: 225px;
   border: 2px solid black;
   border-radius: 8%;
-  /* top: 10px; */
 }
-/*******/
 
+/******Card Flips*******/
+
+
+/********Tie Pot********/
 .tie-pot {
   position: absolute;
   top: 35%;
   left: 2%;
   opacity: 0;
-  z-index: 1000;
+  z-index: 1;
 }
 
 .tie-pot.active {
@@ -172,102 +191,59 @@ img {
   transform: translate(-50%, -50%);
 }
 
-.player-card:hover {
-  opacity: 0.33;
-  cursor: pointer;
-}
-
-.player-card.played:hover {
-  opacity: 1;
-  cursor: auto;
-}
-
-/*****************WIN******************/
+/************WIN*************/
 /*When player wins:*/
 .player-card.win img {
+  border-color: blue;
   /*Animate to bottom left*/
-  transition: transform 0.6s ease-in;
-  transform: translate(-250%, 65%) scale(0.0);
+  transition: transform 1s ease-in;
+  transform: translate(-400%, 80%) scale(0.0);
 }
 
 /*When AI wins:*/
 .ai-card.win img {
+  border-color: red;
   /*Animate to top left*/
-  transition: transform 0.6s ease-in;
-  transform: translate(250%, 65%) scale(0.0);
+  transition: transform 1s ease-in;
+  transform: translate(400%, 80%) scale(0.0);
 }
 
-/*****************LOSE******************/
+/************LOSE*************/
 /*When player loses to AI:*/
 .player-card.lose img {
   /*Animate to top left*/
   border-color: red;
-  transition: transform 0.6s ease-in;
-  transform: translate(-250%, -200%) scale(0.0);
+  transition: transform 1s ease-in;
+  transform: translate(-400%, -175%) scale(0.0);
 }
 
 /*When AI loses to player:*/
 .ai-card.lose img {
   /*Animate to bottom left*/
   border-color: blue;
-  transition: transform 0.6s ease-in;
-  transform: translate(250%, -200%) scale(0.0);
+  transition: transform 1s ease-in;
+  transform: translate(400%, -175%) scale(0.0);
 }
 
-/*****************TIE******************/
+/************TIE*************/
 /*When player card ties with AI:*/
 .player-card.tie img {
-  border-color: orange;
-  transition: transform 0.6s ease-in;
-  transform: translate(0%, 65%) scale(0);
+  border-color: purple;
+  transition: transform 1s ease-in;
+  transform: translate(-400%, -38%) scale(0);
 }
 
 /*When AI card ties with player:*/
 .ai-card.tie img {
-  border-color: orange;
-  transition: transform 0.6s ease-in;
-  transform: translate(0%, 65%) scale(0);
-}
-
-/* .player-tie {
-  flex-direction: row;
-  text-align: center;
-  border-radius: 10px;
-  left: 27%;
-  height: 50px;
-  margin-left: 7%;
-  position: relative;
-  border: 2px solid blue;
-  background-color: red;
-} */
-
-.player-tie img {
-  border: 2px dashed orange;
-  height: 45px;
-  width: 30px;
-  border-radius: 10%;
-}
-
-/* .ai-tie {
-  flex-direction: row;
-  text-align: center;
-  border-radius: 10px;
-  left: 27%;
-  height: 45px;
-  max-width: 600px;
-  margin-left: 10%;
-  padding: 0;
-  position: relative;
-} */
-
-.ai-tie img {
-  border: 2px dashed orange;
-  height: 45px;
-  width: 30px;
-  border-radius: 10%;
+  border-color: purple;
+  transition: transform 1s ease-in;
+  transform: translate(400%, -38%) scale(0);
 }
 
 /*****************WIN TIE animations******************/
+
+/* TODO: Have these cards now disperse from tie pot */
+
 .player-tie.win img {
   position: absolute;
   border: 2px dashed blue;
@@ -323,14 +299,6 @@ img {
   bottom: 70px;
 }
 
-.ai-score {
-  /* margin-right: 10px; */
-}
-
-.player-score {
-  /* margin-right: 10px; */
-}
-
 @media (max-height: 1368px) {
   .player-card img {
     width: 200px;
@@ -367,9 +335,43 @@ img {
   }
 }
 
+@media (max-width: 1024px) {
+  /*When player wins:*/
+  .player-card.win img {
+    transform: translate(-100%, 80%) scale(0.0);
+  }
+
+  /*When AI wins:*/
+  .ai-card.win img {
+    transform: translate(100%, 65%) scale(0.0);
+  }
+
+  /*When player loses to AI:*/
+  .player-card.lose img {
+    /*Animate to top left*/
+    transform: translate(-100%, -200%) scale(0.0);
+  }
+
+  /*When AI loses to player:*/
+  .ai-card.lose img {
+    /*Animate to bottom left*/
+    transform: translate(100%, -200%) scale(0.0);
+  }
+
+  /*When player card ties with AI:*/
+  .player-card.tie img {
+    transform: translate(-250%, -38%) scale(0);
+  }
+
+  /*When AI card ties with player:*/
+  .ai-card.tie img {
+    transform: translate(250%, -38%) scale(0);
+  }
+}
+
+
 @media (max-width: 290px) {
   h1 {
     font-size: 1.7rem;
   }
-
 }
