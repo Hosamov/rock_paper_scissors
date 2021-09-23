@@ -12,30 +12,38 @@
     </div>
 
     <div id="container" class="container">
-      <div class="ui ui-computer">
-        <div id="ai-score" class="ai-score"></div>
-        <div id="ai-tie" class="ai-tie"></div>
-      </div>
-      <div class="tie-pot active">
-        Tie Pot: <br>
-        <img src="images/card_back.png" />
-        <div class="tie-pot-centered">Num</div>
+      <div id="content-wrap">
+
+        <div class="ui ui-computer">
+          <div id="ai-score" class="ai-score"></div>
+          <div id="ai-tie" class="ai-tie"></div>
+        </div>
+
+        <div class="tie-pot active">
+          Tie Pot: <br>
+          <img src="images/card_back.png" />
+          <div class="tie-pot-centered">Num</div>
+        </div>
+
+        <div class="play-area" id="play-area">
+            <!-- AI card dynamically added here -->
+            <!-- Player card dynamically added here -->
+        </div>
+
+        <div class='ui ui-player'>
+          <div id="player-score" class="player-score"></div>
+          <div id="player-tie" class="player-tie"></div>
+        </div>
       </div>
 
-      <div class="play-area center" id="play-area">
-          <!-- AI card dynamically added here -->
-          <!-- Player card dynamically added here -->
-      </div>
-      <div class='ui ui-player'>
-        <div id="player-score" class="player-score"></div>
-        <div id="player-tie" class="player-tie"></div>
-      </div>
+      <footer id="footer">
+        <h5>Copyright © 2021, Matt Coale (BackyardDev.io)</h4>
+      </footer>
+
       <!-- message container code dynamically added here -->
     </div>
 
-    <footer>
-      <h5>Copyright © 2021, Matt Coale (BackyardDev.io)</h4>
-    </footer>
+
 
     <script src="script.js" type="module"></script>
 

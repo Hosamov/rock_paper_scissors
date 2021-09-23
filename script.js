@@ -319,6 +319,12 @@ function cardImageHandler(card) {
 //TODO: Add end game functionality (winning/losing message, 'restart game' button)
 //TODO: Add click handler for player to start a new game (shuffle deck)
 //TODO: Add game instructions prior to game start
+//TODO: Remove win/lose message for every card played:
+  //Use for tie rounds and end of game to display tie, win, or lose message.
+
+//TODO: Fix bug: multiple ties results in player win...
+    // Reshuffle cards in hand before readding them to the individual player?
+
 
 // Start game:
 createDeck(2); // 9, 12, 18

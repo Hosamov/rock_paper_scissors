@@ -1,55 +1,78 @@
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap');
 
 body {
-  background-color: yellow;
+  position: relative;
+  /* background-color: yellow; */
   font-family: 'Josefin Sans', sans-serif;
-  /* display: flex; */
-  /* height: 100vh; */
   max-width: 100vw;
   align-items: center;
   justify-content: center;
   margin: 0;
+  padding: 0;
   overflow: hidden;
 }
 
 .header {
   display: block;
-  block-size: 32px;
-  /* position: absolute; */
-  left: 0px;
-  top: 0px;
-  width: 100vw;
   text-align: center;
-  background-color: blue;
+  /* background-color: blue; */
 }
 
-footer {
-  /* display: block; */
-  /* bottom: 0; */
-  /* left: 0; */
-  /* width: 100vw; */
-  text-align: center;
-  background-color: purple;
+h1 {
+  /*Center align h1 text*/
+  margin: 6px auto 6px auto;
 }
 
 .container {
-  /* position: relative; */
+  position: relative;
+  min-height: 100vh;
   display: block;
-  background-color: green;
-  /* padding-top: 30px; */
-  width: 100vw;
+  height: auto;
+  /* background-color: green; */
   margin: 0;
 }
 
+#content-wrap {
+  position: absolute;
+  /* background-color: red; */
+  width: 100vw;
+  left: 0;
+  top: 0;
+  bottom: 20px;
+}
+
+#footer {
+  position: absolute;
+  bottom: 45px;
+  width: 100%;
+  height: 2.5rem;
+  text-align: center;
+  /* background-color: purple; */
+}
+
+h5 {
+  /* background-color: limegreen; */
+  /*Center align h5 text*/
+  margin: 6px auto 6px auto;
+}
+
+img {
+  object-fit: contain;
+}
+
 .play-area {
-  position: relative;
-  background-color: purple;
-  width: 170px;
-  /* align-items: center;
-  justify-content: center; */
-  top: 50%;
-  left: 50%;
+  position: absolute;
+  /* background-color: purple; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  top: 5%;
+  bottom: 15%;
+  left: 10%;
+  right: 10%;
   margin: 5px 0;
+  text-align: center;
+  align-items: center;
 }
 
 /***********Message Styles************/
@@ -93,13 +116,6 @@ footer {
 }
 /******************************/
 
-
-
-/* Cards: */
-/* .player-card {
-  border-radius: 15px;
-} */
-
 .player-card img {
   position: relative;
   left: 9px;
@@ -108,11 +124,8 @@ footer {
   height: 225px;
   /* border: 2px dashed blue; */
   border-radius: 8%;
+  margin-top: 20px;
 }
-
-/* .ai-card {
-
-} */
 
 .ai-card img {
   transform: rotate(180deg);
@@ -122,16 +135,16 @@ footer {
   height: 225px;
   /* border: 2px dashed red; */
   border-radius: 8%;
+  top: 10px;
 }
 /*******/
 
 .tie-pot {
   position: absolute;
-  top: 50%;
-  /* top: 43%; */
+  top: 35%;
   left: 2%;
-  float: left;
   opacity: 0;
+  z-index: 1000;
 }
 
 .tie-pot.active {
@@ -287,23 +300,20 @@ footer {
 }
 
 .ui-computer {
-  /* position: absolute; */
+  position: absolute;
   display: block;
-  block-size: 28px;
-  top: 28;
-  left: 0;
-  /* float: left; */
   border: 1px dashed red;
-  background-color: red;
+  /* background-color: red; */
   padding: 1px 0;
 }
 
 .ui-player {
+  position: absolute;
   display: block;
-  block-size: 28px;
-  /* float: left; */
   border: 1px dashed blue;
+  /* background-color: blue; */
   padding: 3px 0;
+  bottom: 60px;
 }
 
 .ai-score {
@@ -312,4 +322,40 @@ footer {
 
 .player-score {
   /* margin-right: 10px; */
+}
+
+@media (max-height: 1368px) {
+  .player-card img {
+    margin-top: 10px; /*Get a little top space for P1 card*/
+    width: 200px;
+    height: 300px;
+    padding-top: 10px;
+  }
+
+  .ai-card img {
+    width: 200px;
+    height: 300px;
+  }
+}
+
+@media (max-height: 820px) {
+  .player-card img {
+    margin-top: 10px; /*Get a little top space for P1 card*/
+    width: 130px;
+    height: 195px;
+    padding-top: 10px;
+  }
+
+  .ai-card img {
+    width: 130px;
+    height: 195px;
+  }
+
+}
+
+@media (max-width: 290px) {
+  h1 {
+    font-size: 1.7rem;
+  }
+
 }
