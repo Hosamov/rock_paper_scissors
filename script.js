@@ -9,6 +9,7 @@ const aiScore = document.getElementById('ai-score');
 const playerTie = document.getElementById('player-tie');
 const aiTie = document.getElementById('ai-tie');
 const tiePot = document.getElementById('tie-pot');
+const tiePotText = document.querySelector('.tie-pot-centered');
 const uiComputer = document.querySelector('.ui-computer');
 
 //Declare global variables:
@@ -134,7 +135,7 @@ function addMessage(message, btnText, state, hasWon) {
       btnEl.innerText = btnText;
       btnEl.addEventListener('click', () => {
          createDeck(8, true);
-        // TODO: Figure out how to reset the game.
+        // TODO: Add functionality to reset the game.
         console.log('Called "Play again"');
         container.lastElementChild.remove(); //remove message container
       });
@@ -150,36 +151,37 @@ function drawCard(hasWon) {
 
   console.log(p1.length, p2.length);
 
-  uiHandler();
   // Declare variables for elements needed
   const playerCard = document.querySelector('.player-card');
   const aiCard = document.querySelector('.ai-card');
 
-  // Animate card styles based on P1 win/lose/tie state:
-  if(hasWon === true && hasWon !== null) {
-    playerCard.classList.add('win');
-    aiCard.classList.add('lose');
-  } else if(hasWon === false) {
-    playerCard.classList.add('lose');
-    aiCard.classList.add('win');
-  } else {
-    playerCard.classList.add('tie');
-    aiCard.classList.add('tie');
-  }
-
-  // Run an updated instance of the game, using each player's next card:
   setTimeout(() => {
-    if(hasWon === true) playArea.innerHTML = '';
+    // Animate card styles based on P1 win/lose/tie state:
+    if(hasWon === true && hasWon !== null) {
+      playerCard.classList.add('win');
+      aiCard.classList.add('lose');
+    } else if(hasWon === false) {
+      playerCard.classList.add('lose');
+      aiCard.classList.add('win');
+    } else {
+      playerCard.classList.add('tie');
+      aiCard.classList.add('tie');
+    }
+  }, 2000); // 2s
 
-    // Ensure currentCard resets when length has been reached:
+  // Clear play area, draw new cards:
+  setTimeout(() => {
+    if (hasWon) playArea.innerHTML = '';
+
+    // Ensure if there are still cards, that they can be played:
     if(p1[currentCard] === undefined || p2[currentCard] === undefined) {
-      currentCard = 0; // Reset position of currentCard
+      currentCard = 0;
     }
 
-    // Draw new card at current index
+    // Draw new card at the current index
     runGameInstance(p1[currentCard], p2[currentCard]);
     currentCard++;
-  }, 1000);
+  }, 3000); // 3s
 }
 
 /*
@@ -188,15 +190,18 @@ function drawCard(hasWon) {
 * @param  {String} p2Card  Name of P2's current card
 */
 function runGameInstance(p1Card, p2Card) {
+  // Assess player arrays to determine if game over:
   if(p1.length === 0 || p2.length === 0) {
     endGame();
   }
+
+  uiHandler(); // Update scores
 
   // Add starting cards
   addUpdateCard(cardImageHandler(p1Card), cardImageHandler(p2Card));
   const playerCard = document.querySelector('.player-card img');
 
-  // Perform logic once game area has been clicked on by player:
+  // Perform following logic once game area has been clicked on:
   playerCard.addEventListener('click', () => {
     cardFlipped = true;
     addUpdateCard(cardImageHandler(p1Card), cardImageHandler(p2Card)); //flip cards over
@@ -206,38 +211,31 @@ function runGameInstance(p1Card, p2Card) {
       if (p1Card === device.device) {
         console.log('You drew ' + device.device);
         if (p2Card === device.win) {
-          addMessage(`You Won that round! ${device.device} beats ${device.win}.`, 'Draw again.', 'draw', true);
+          // addMessage(`You Won that round! ${device.device} beats ${device.win}.`, 'Draw again.', 'draw', true);
+          drawCard(true);
           tieResult('win', 'lose');
           tieWinHandler(p1);
           gameUpdateHandler(p1, p2, device.device, device.win);
         } else if (p2Card === device.lose) {
-          addMessage(`You lost that round. ${device.device} loses to ${device.lose}.`, 'Draw again.', 'draw', false);
+          // addMessage(`You lost that round. ${device.device} loses to ${device.lose}.`, 'Draw again.', 'draw', false);
+          drawCard(false);
           tieResult('lose', 'win');
           tieWinHandler(p2);
-          gameUpdateHandler(p2, p1, device.device); // Note: P2 takes only 3 args (as opposed to 4 for p1)
-        } else { // Begin War...
-          addMessage(`Tie round.`, 'Draw again.', 'draw');
+          gameUpdateHandler(p2, p1, device.device); // Note: P2 takes only 3 args (as opposed to 4 for P1)
+        } else { // Tie round: Begin War...
+          // addMessage(`Tie round.`, 'Draw again.', 'draw');
+          drawCard();
           tieArr.push(p1Card, p2Card); //place tied cards in their own array
 
           // Remove both P1's & P2's tied cards from their hands temporarily:
           p1.shift(0);
           p2.shift(0);
 
-          //TODO: Add tie pot functionality instead of current way of pushing
-          // cards to their individual tie locations...
-
-          const btnEl = document.getElementById('action-button');
-          btnEl.addEventListener('click', () => {
-            // Add card images to respective game tie areas
-            setTimeout(() => {
-              playerTie.insertAdjacentHTML('beforeend', `
-                <img src=${device.assets[0]}>
-              `);
-              aiTie.insertAdjacentHTML('beforeend', `
-                <img src=${device.assets[0]}>
-              `);
-            }, 600);
-          })
+          // Add a tie pot:
+          setTimeout(() => {
+            tiePot.classList.add('active');
+            tiePotText.innerText = tieArr.length;
+          }, 2000); // Wait 2s
         }
       }
     });
@@ -266,15 +264,13 @@ function uiHandler() {
 function tieResult(class1, class2) {
   playerTie.classList.add(class1);
   aiTie.classList.add(class2);
-  setTimeout(() => clearTied(), 2000);
+  setTimeout(() => clearTiePot(), 2000);
 }
 
-// Function to reset tie DOM elements:
-function clearTied() {
-  playerTie.classList.remove('win', 'lose');
-  aiTie.classList.remove('win', 'lose');
-  playerTie.innerHTML = '';
-  aiTie.innerHTML = '';
+// Function to reset tie pot DOM elements:
+function clearTiePot() {
+  tiePot.classList.remove('active');
+  tiePotText.innerText = '';
 }
 
 /*
