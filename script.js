@@ -8,6 +8,7 @@ const playerScore = document.getElementById('player-score');
 const aiScore = document.getElementById('ai-score');
 const playerTie = document.getElementById('player-tie');
 const aiTie = document.getElementById('ai-tie');
+const tiePot = document.getElementById('tie-pot');
 const uiComputer = document.querySelector('.ui-computer');
 
 //Declare global variables:
@@ -175,7 +176,8 @@ function drawCard(hasWon) {
       currentCard = 0; // Reset position of currentCard
     }
 
-    runGameInstance(p1[currentCard], p2[currentCard]); //draw new card at current index
+    // Draw new card at current index
+    runGameInstance(p1[currentCard], p2[currentCard]);
     currentCard++;
   }, 1000);
 }
@@ -220,6 +222,9 @@ function runGameInstance(p1Card, p2Card) {
           // Remove both P1's & P2's tied cards from their hands temporarily:
           p1.shift(0);
           p2.shift(0);
+
+          //TODO: Add tie pot functionality instead of current way of pushing
+          // cards to their individual tie locations...
 
           const btnEl = document.getElementById('action-button');
           btnEl.addEventListener('click', () => {
@@ -314,15 +319,13 @@ function cardImageHandler(card) {
   }
 }
 
-
-
 //TODO: Add end game functionality (winning/losing message, 'restart game' button)
 //TODO: Add click handler for player to start a new game (shuffle deck)
 //TODO: Add game instructions prior to game start
 //TODO: Remove win/lose message for every card played:
   //Use for tie rounds and end of game to display tie, win, or lose message.
 
-//TODO: Fix bug: multiple ties results in player win...
+//TODO: Fix bug: multiple ties toward end of deck, restulting in auto win...
     // Reshuffle cards in hand before readding them to the individual player?
 
 

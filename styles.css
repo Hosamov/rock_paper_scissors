@@ -13,8 +13,11 @@ body {
 }
 
 .header {
+  background-color: #001E6C;
+  color: #fff;
   display: block;
   text-align: center;
+  padding-top: 5px;
   /* background-color: blue; */
 }
 
@@ -43,15 +46,16 @@ h1 {
 
 #footer {
   position: absolute;
-  bottom: 45px;
+  bottom: 35px;
   width: 100%;
   height: 2.5rem;
   text-align: center;
-  /* background-color: purple; */
+  padding: 6px 0;
+  background-color: #FFAA4C;
 }
 
 h5 {
-  /* background-color: limegreen; */
+  color: #363636;
   /*Center align h5 text*/
   margin: 6px auto 6px auto;
 }
@@ -62,11 +66,10 @@ img {
 
 .play-area {
   position: absolute;
-  /* background-color: purple; */
   display: flex;
   flex-direction: column;
   justify-content: center;
-  top: 5%;
+  top: 2%;
   bottom: 15%;
   left: 10%;
   right: 10%;
@@ -115,16 +118,17 @@ img {
   outline: none;
 }
 /******************************/
+.player-card {
+  margin-top: 20px;
+}
 
 .player-card img {
   position: relative;
   left: 9px;
-  margin-top: 10px; /*Get a little top space for P1 card*/
   width: 150px;
   height: 225px;
-  /* border: 2px dashed blue; */
+  border: 2px solid black;
   border-radius: 8%;
-  margin-top: 20px;
 }
 
 .ai-card img {
@@ -133,9 +137,9 @@ img {
   left: 9px;
   width: 150px;
   height: 225px;
-  /* border: 2px dashed red; */
+  border: 2px solid black;
   border-radius: 8%;
-  top: 10px;
+  /* top: 10px; */
 }
 /*******/
 
@@ -313,7 +317,7 @@ img {
   border: 1px dashed blue;
   /* background-color: blue; */
   padding: 3px 0;
-  bottom: 60px;
+  bottom: 70px;
 }
 
 .ai-score {
@@ -326,10 +330,8 @@ img {
 
 @media (max-height: 1368px) {
   .player-card img {
-    margin-top: 10px; /*Get a little top space for P1 card*/
     width: 200px;
     height: 300px;
-    padding-top: 10px;
   }
 
   .ai-card img {
@@ -340,17 +342,26 @@ img {
 
 @media (max-height: 820px) {
   .player-card img {
-    margin-top: 10px; /*Get a little top space for P1 card*/
     width: 130px;
     height: 195px;
-    padding-top: 10px;
   }
 
   .ai-card img {
     width: 130px;
     height: 195px;
   }
+}
 
+@media (max-height: 620px) {
+  .player-card img {
+    width: 120px;
+    height: 180px;
+  }
+
+  .ai-card img {
+    width: 120px;
+    height: 180px;
+  }
 }
 
 @media (max-width: 290px) {
