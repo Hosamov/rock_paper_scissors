@@ -9,6 +9,7 @@ const aiScore = document.getElementById('ai-score');
 const playerTie = document.getElementById('player-tie');
 const aiTie = document.getElementById('ai-tie');
 const tiePot = document.getElementById('tie-pot');
+const tiePotCentered = document.querySelector('.tie-pot-centered');
 const tiePotText = document.querySelector('.tie-pot-centered');
 const uiComputer = document.querySelector('.ui-computer');
 
@@ -31,6 +32,7 @@ async function createDeck(num, gameReset) {
     newDeck = [];
     playerDecks = [[],[]];
     [p1, p2] = playerDecks;
+    tieArr = [];
     currentCard = 0;
   }
 
@@ -110,9 +112,8 @@ function addUpdateCard(p1ImageFront, p2ImageFront) { //classes: ai-card, player-
 * @param  {String} message  Win/lose message
 * @param  {String} btnText  Text for btnEl
 * @param  {String} state    For determining button state
-* @param  {Boolean} hasWon  Passthrough param for tracking win/lose state
 */
-function addMessage(message, btnText, state, hasWon) {
+function addMessage(message, btnText, state) {
   container.insertAdjacentHTML('beforeend', `
     <div id="message" class="message">
       <h4>${message}</h4>
@@ -124,24 +125,15 @@ function addMessage(message, btnText, state, hasWon) {
   const messageEl = document.getElementById('message');
   setTimeout(() => messageEl.classList.add('visible'), 1000);
 
-  //Add button functionality:
-  switch(state) {
-    case 'draw':
-      btnEl.innerText = btnText;
-      btnEl.addEventListener('click', () => {
-        drawCard(hasWon);
-        container.lastElementChild.remove(); //remove message container
-      });
-      break;
-    case 'shuffle': // End of game
-      btnEl.innerText = btnText;
-      btnEl.addEventListener('click', () => {
-         createDeck(8, true);
-        // TODO: Add functionality to reset the game.
-        console.log('Called "Play again"');
-        container.lastElementChild.remove(); //remove message container
-      });
-      break;
+  // Add button functionality:
+  // Allow for additional message blocks, when necessary
+  if(state === 'shuffle') { // End of game
+    btnEl.innerText = btnText;
+    btnEl.addEventListener('click', () => {
+      setTimeout(() => createDeck(8, true), 2000);
+      console.log('Called "Play again"');
+      container.lastElementChild.remove(); //remove message container
+    });
   }
 }
 
@@ -254,10 +246,28 @@ function runGameInstance(p1Card, p2Card) {
 * Function to test and return end game state
 */
 function endGame() {
-  playArea.innerHTML = '';
-  (p2.length === 0) ?
-    addMessage('Congratulations...You win!', 'Shuffle and Play Again', 'shuffle', true) :
-    addMessage('Game over. Better luck next time.', 'Shuffle and Play Again', 'shuffle', false);
+  if(tiePot.classList.contains('active')) {
+    (p1 > p2) ? (
+      tieResult('win', 'lose'),
+      tieWinHandler(p1)
+    ) : (
+      tieResult('lose', 'win'),
+      tieWinHandler(p2)
+    )
+  }
+
+  setTimeout(() => {
+    playArea.innerHTML = '';
+    if(p1.length === 0 && p2.length > 0) {
+      return addMessage('Game over. Better luck next time.', 'Shuffle and Play Again', 'shuffle');
+    } else if (p1.length > 0 && p2.length === 0) {
+      return addMessage('Congratulations...You win!', 'Shuffle and Play Again', 'shuffle');
+    } else {
+      return addMessage('Tie game.', 'Shuffle and Play Again', 'shuffle');
+    }
+  }, 3000);
+
+
 }
 
 //////////////////////////HELPER FUNCTIONS//////////////////////
@@ -268,8 +278,9 @@ function uiHandler() {
   playerScore.innerHTML = `<i class="fas fa-user"></i> Player: ${p1.length} cards`;
 }
 
-// Function to add proper classNames then clear the tie area:
+// Function to append correct classnames then clear the tie area after tie break:
 function tieResult(class1, class2) {
+  console.log('tieResult called');
   playerTie.classList.add(class1);
   aiTie.classList.add(class2);
   setTimeout(() => clearTiePot(), 2000);
@@ -277,8 +288,28 @@ function tieResult(class1, class2) {
 
 // Function to reset tie pot DOM elements:
 function clearTiePot() {
-  tiePot.classList.remove('active');
-  tiePotText.innerText = '';
+  console.log('clearTiePot called');
+  winTiePotAnimation();
+  uiHandler();
+  setTimeout(() => {
+    tiePot.classList.remove('active', 'win', 'lose');
+    playerTie.classList.remove('win', 'lose');
+    aiTie.classList.remove('win', 'lose');
+    tiePotText.innerText = '';
+  }, 2000);
+}
+
+function winTiePotAnimation() {
+  // Card animations for win/lose:
+  if(playerTie.classList.contains('win')) {
+    tiePot.classList.add('win');
+    tiePot.classList.remove('lose');
+  } else if (playerTie.classList.contains('lose')) {
+    tiePot.classList.add('lose');
+    tiePot.classList.remove('win');
+  } else {
+    tiePot.classList.remove('win', 'lose');
+  }
 }
 
 /*
@@ -325,4 +356,4 @@ function cardImageHandler(card) {
 //TODO: Add game instructions prior to game start
 
 // Start game:
-createDeck(8); // 8, 12, 18
+createDeck(2); // 8, 12, 18
