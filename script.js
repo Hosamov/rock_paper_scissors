@@ -13,10 +13,11 @@ const tiePotCentered = document.querySelector('.tie-pot-centered');
 const tiePotText = document.querySelector('.tie-pot-centered');
 const uiComputer = document.querySelector('.ui-computer');
 
-//Declare global variables:
+//Declare global variables needed:
+const cardImageBack = './images/card_back.png';
+let deckSize = 18; // 18, 36, 54
 let newDeck = []; //init newDeck var to hold all card values before dispersing
 let playerDecks = [ [],[] ];
-const cardImageBack = './images/card_back.png';
 let tieArr = []; // Array to keep track of tied cards
 let [p1, p2] = playerDecks; // p1 = human player, p2 = ai player
 let cardFlipped = false; // Globally track whether card is flipped
@@ -26,7 +27,7 @@ let currentCard = 0; // Iterator for current card index
 * Function to create a new deck with 18, 36, or 54 cards
 * @param  {Number} num  Iterator value (9, 12, 18)
 */
-async function createDeck(num, gameReset) {
+function createDeck(num, gameReset) {
   if(gameReset) {
     // Reset the global vars for a new game iteration:
     newDeck = [];
@@ -36,12 +37,14 @@ async function createDeck(num, gameReset) {
     currentCard = 0;
   }
 
+  const splitNum = (num / 3);
   const classes = ['Rock', 'Paper', 'Scissors'];
-  for (let i = 0; i < num; i++) {
+  for (let i = 0; i < splitNum; i++) {
     newDeck.push(...classes);
   }
-   shuffleDeck(newDeck); // Shuffle deck
-   dealCards(newDeck); // Deal out shuffled deck
+   // Shuffle deck and deal out cards
+   shuffleDeck(newDeck);
+   dealCards(newDeck);
 }
 
 /*
@@ -66,14 +69,14 @@ function shuffleDeck(array) {
 */
 function dealCards(newDeck) {
   for (let i = 0; i < newDeck.length; i++) {
-    playerDecks[i % 2].push(newDeck[i]); //check odd/even values, push value to respective player decks
+    // Check odd/even values, push value to respective player decks
+    playerDecks[i % 2].push(newDeck[i]);
   }
 
   // Pass starting cards to P1 & P2
   runGameInstance(p1[currentCard], p2[currentCard]);
   currentCard++;
-  console.log(p1.length, p2.length);
-  uiHandler(p1, p2); //send array data to ui handler
+  uiHandler(p1, p2); // Send current score data to ui handler
 }
 
 /*
@@ -142,9 +145,6 @@ function addMessage(message, btnText, state) {
 * @param  {Boolean} hasWon  State of win/lose for round
 */
 function drawCard(hasWon) {
-
-  console.log(p1.length, p2.length);
-
   // Declare variables for elements needed
   const playerCard = document.querySelector('.player-card');
   const aiCard = document.querySelector('.ai-card');
@@ -186,7 +186,7 @@ function drawCard(hasWon) {
 function runGameInstance(p1Card, p2Card) {
   uiHandler(); // Update scores
 
-  // Assess player arrays to determine if game over:
+  // Assess both player arrays to determine whether game is over
   if(p1.length <= 0 || p2.length <= 0) {
     return endGame();
   }
@@ -203,24 +203,21 @@ function runGameInstance(p1Card, p2Card) {
     // Loop through devices array to check cards against each other:
     devices.forEach(device => {
       if (p1Card === device.device) {
-        console.log('You drew ' + device.device);
         if (p2Card === device.win) {
-          // addMessage(`You Won that round! ${device.device} beats ${device.win}.`, 'Draw again.', 'draw', true);
-          drawCard(true);
+          drawCard(true); // Win
           tieResult('win', 'lose');
           tieWinHandler(p1);
           gameUpdateHandler(p1, p2, device.device, device.win);
         } else if (p2Card === device.lose) {
-          // addMessage(`You lost that round. ${device.device} loses to ${device.lose}.`, 'Draw again.', 'draw', false);
-          drawCard(false);
+          drawCard(false); // Lose
           tieResult('lose', 'win');
           tieWinHandler(p2);
           gameUpdateHandler(p2, p1, device.device); // Note: P2 takes only 3 args (as opposed to 4 for P1)
         } else { // Tie round: Begin War...
-          drawCard();
-          tieArr.push(p1Card, p2Card); // Place tied cards in their own array
+          drawCard(); // Null
+          tieArr.push(p1Card, p2Card); // Place tied cards into their own array
 
-          // Shuffle P1 & P2 decks for less chance of continued battle...
+          // Shuffle both P1 & P2 decks to add randomness after > 4 cards in tie pot
           if (tieArr.length > 4) {
             console.log('Shuffling decks...');
             shuffleDeck(p1);
@@ -231,7 +228,7 @@ function runGameInstance(p1Card, p2Card) {
           p1.shift(0);
           p2.shift(0);
 
-          // Add a tie pot:
+          // Display the tie pot:
           setTimeout(() => {
             tiePot.classList.add('active');
             tiePotText.innerText = tieArr.length;
@@ -246,14 +243,18 @@ function runGameInstance(p1Card, p2Card) {
 * Function to test and return end game state
 */
 function endGame() {
+  // First, check if the tie pot exists:
   if(tiePot.classList.contains('active')) {
-    (p1 > p2) ? (
-      tieResult('win', 'lose'),
+    // Give player with the most cards the tie pot
+    if(p1 > p2) {
+      tieResult('win', 'lose'), // P1 wins
       tieWinHandler(p1)
-    ) : (
-      tieResult('lose', 'win'),
+    } else if (p1 < p2) {
+      tieResult('lose', 'win'), // P2 wins
       tieWinHandler(p2)
-    )
+    } else {
+      tieResult(); // Tie game (no player gets the pot)
+    }
   }
 
   setTimeout(() => {
@@ -265,12 +266,11 @@ function endGame() {
     } else {
       return addMessage('Tie game.', 'Shuffle and Play Again', 'shuffle');
     }
-  }, 3000);
-
-
+  }, 2000); // 2s
 }
 
-//////////////////////////HELPER FUNCTIONS//////////////////////
+
+////HELPER FUNCTIONS////
 
 // Display current cards per player:
 function uiHandler() {
@@ -278,9 +278,17 @@ function uiHandler() {
   playerScore.innerHTML = `<i class="fas fa-user"></i> Player: ${p1.length} cards`;
 }
 
+
+// Helper function to distribute cards to the winning player
+function tieWinHandler(playerArr) {
+  if (tieArr.length) {
+    playerArr.push(...tieArr);
+    tieArr = []; //empty global array
+  }
+}
+
 // Function to append correct classnames then clear the tie area after tie break:
 function tieResult(class1, class2) {
-  console.log('tieResult called');
   playerTie.classList.add(class1);
   aiTie.classList.add(class2);
   setTimeout(() => clearTiePot(), 2000);
@@ -288,7 +296,6 @@ function tieResult(class1, class2) {
 
 // Function to reset tie pot DOM elements:
 function clearTiePot() {
-  console.log('clearTiePot called');
   winTiePotAnimation();
   uiHandler();
   setTimeout(() => {
@@ -299,6 +306,7 @@ function clearTiePot() {
   }, 2000);
 }
 
+// Helper function to animate tie pot win/lose status
 function winTiePotAnimation() {
   // Card animations for win/lose:
   if(playerTie.classList.contains('win')) {
@@ -314,34 +322,23 @@ function winTiePotAnimation() {
 
 /*
 * Helper function that takes two player areas and two card values, then
-* add/remove in correct hand:
+* adds/removes to/from correct hand:
 */
 function gameUpdateHandler(arr1, arr2, card, losingCard) {
+  // Push card to win arr, shift card from lose arr
   return (!losingCard) ? (
     arr1.push(card),
-    arr2.shift(card),
-    console.log(p1, p2)
+    arr2.shift(card)
   ) : (
-    arr1.push(losingCard), //push losing card to player
-    arr2.shift(losingCard), //remove losing card from ai
-    console.log(p1, p2)
+    arr1.push(losingCard),
+    arr2.shift(losingCard)
   );
 }
 
 /*
-* Helper function to distribute cards to the winning player
-*/
-function tieWinHandler(playerArr) {
-  if (tieArr.length) {
-    playerArr.push(...tieArr);
-    tieArr = []; //empty global array
-  }
-}
-
-/*
  * Helper function to get and return the corresponding device image randomly
- * from assets list.
- * Note: There are 3 (three) total images to display per device (see gameLogic.js).
+ * from list of assets
+ * Note: There are 3 (three) total images to display per device (see gameLogic.js)
  */
 function cardImageHandler(card) {
   for (let device of devices) {
@@ -352,8 +349,9 @@ function cardImageHandler(card) {
   }
 }
 
-//TODO: Add click handler for player to start a new game (shuffle deck)
-//TODO: Add game instructions prior to game start
 
-// Start game:
-createDeck(2); // 8, 12, 18
+//TODO: Add game instructions prior to game start
+//TODO: Add click handler for player to start a new game (shuffle deck)
+
+// Start game instance:
+createDeck(deckSize);
