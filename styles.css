@@ -85,6 +85,23 @@ button {
   align-items: center;
 }
 
+.instructions {
+  position: absolute;
+  top: 2%;
+  right: 14px;
+  color: #fff;
+}
+
+.fa-info-circle {
+  transform: scale(2);
+  opacity: 0.5;
+}
+
+.fa-info-circle:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+
 /***********Message Styles************/
 .message {
   position: absolute;
