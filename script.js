@@ -25,7 +25,7 @@ let currentCard = 0; // Iterator for current card index
 * Function to create a new deck with 18, 36, or 54 cards
 * @param  {Number} num  Iterator value (9, 12, 18)
 */
-function createDeck(num, gameReset) {
+async function createDeck(num, gameReset) {
   if(gameReset) {
     // Reset the global vars for a new game iteration:
     newDeck = [];
@@ -38,7 +38,8 @@ function createDeck(num, gameReset) {
   for (let i = 0; i < num; i++) {
     newDeck.push(...classes);
   }
-  shuffleDeck(newDeck); // Shuffle new deck to randomize gameplay
+   shuffleDeck(newDeck); // Shuffle deck
+   dealCards(newDeck); // Deal out shuffled deck
 }
 
 /*
@@ -54,7 +55,7 @@ function shuffleDeck(array) {
     array[i] = array[j];
     array[j] = temp;
   }
-  dealCards(array); // fairly deal cards out to both players
+  return array;
 };
 
 /*
@@ -173,7 +174,7 @@ function drawCard(hasWon) {
   setTimeout(() => {
     if (hasWon) playArea.innerHTML = '';
 
-    // Ensure if there are still cards, that they can be played:
+    // Ensure there are still cards before resetting index:
     if(p1[currentCard] === undefined || p2[currentCard] === undefined) {
       currentCard = 0;
     }
@@ -190,12 +191,12 @@ function drawCard(hasWon) {
 * @param  {String} p2Card  Name of P2's current card
 */
 function runGameInstance(p1Card, p2Card) {
-  // Assess player arrays to determine if game over:
-  if(p1.length === 0 || p2.length === 0) {
-    endGame();
-  }
-
   uiHandler(); // Update scores
+
+  // Assess player arrays to determine if game over:
+  if(p1.length <= 0 || p2.length <= 0) {
+    return endGame();
+  }
 
   // Add starting cards
   addUpdateCard(cardImageHandler(p1Card), cardImageHandler(p2Card));
@@ -223,11 +224,17 @@ function runGameInstance(p1Card, p2Card) {
           tieWinHandler(p2);
           gameUpdateHandler(p2, p1, device.device); // Note: P2 takes only 3 args (as opposed to 4 for P1)
         } else { // Tie round: Begin War...
-          // addMessage(`Tie round.`, 'Draw again.', 'draw');
           drawCard();
-          tieArr.push(p1Card, p2Card); //place tied cards in their own array
+          tieArr.push(p1Card, p2Card); // Place tied cards in their own array
 
-          // Remove both P1's & P2's tied cards from their hands temporarily:
+          // Shuffle P1 & P2 decks for less chance of continued battle...
+          if (tieArr.length > 4) {
+            console.log('Shuffling decks...');
+            shuffleDeck(p1);
+            shuffleDeck(p2);
+          }
+
+          // Remove both P1 & P2's tied cards from their hands temporarily:
           p1.shift(0);
           p2.shift(0);
 
@@ -246,11 +253,11 @@ function runGameInstance(p1Card, p2Card) {
 * Function to test and return end game state
 */
 function endGame() {
+  playArea.innerHTML = '';
   (p2.length === 0) ?
-    addMessage('Congratulations! You have won the war!', 'Play again', 'shuffle', true) :
-    addMessage('Game over. AI has won the war. Better luck next time...', 'Play again', 'shuffle', false);
+    addMessage('Congratulations...You win!', 'Shuffle and Play Again', 'shuffle', true) :
+    addMessage('Game over. Better luck next time.', 'Shuffle and Play Again', 'shuffle', false);
 }
-
 
 //////////////////////////HELPER FUNCTIONS//////////////////////
 
@@ -305,8 +312,6 @@ function tieWinHandler(playerArr) {
  * Note: There are 3 (three) total images to display per device (see gameLogic.js).
  */
 function cardImageHandler(card) {
-  // TODO: Figure out how to make tie card the same as what's shown on the screen
-
   for (let device of devices) {
     const randomImage = Math.floor(Math.random() * device.assets.length);
     if (card === device.device) {
@@ -318,12 +323,8 @@ function cardImageHandler(card) {
 //TODO: Add end game functionality (winning/losing message, 'restart game' button)
 //TODO: Add click handler for player to start a new game (shuffle deck)
 //TODO: Add game instructions prior to game start
-//TODO: Remove win/lose message for every card played:
-  //Use for tie rounds and end of game to display tie, win, or lose message.
 
-//TODO: Fix bug: multiple ties toward end of deck, restulting in auto win...
-    // Reshuffle cards in hand before readding them to the individual player?
-
+//TODO: Fix end game, where a blank card displays under the message overlay...
 
 // Start game:
 createDeck(2); // 9, 12, 18
