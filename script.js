@@ -321,11 +321,8 @@ function cardImageHandler(card) {
   }
 }
 
-//TODO: Add end game functionality (winning/losing message, 'restart game' button)
 //TODO: Add click handler for player to start a new game (shuffle deck)
 //TODO: Add game instructions prior to game start
-
-//TODO: Fix end game, where a blank card displays under the message overlay...
 
 // Start game:
 createDeck(8); // 8, 12, 18
