@@ -13,7 +13,8 @@ body {
 }
 
 .header {
-  background-color: #001E6C;
+  /* background-color: #001E6C; */
+  background-color: #353f5a;
   color: #fff;
   display: block;
   text-align: center;
@@ -23,7 +24,8 @@ body {
 
 h1 {
   /*Center align h1 text*/
-  margin: 6px auto 6px auto;
+  margin: 3px auto auto auto;
+  padding: 8px;
 }
 
 .container {
@@ -31,7 +33,7 @@ h1 {
   min-height: 100vh;
   display: block;
   height: auto;
-  /* background-color: green; */
+  background-color: #8492b5;
   margin: 0;
 }
 
@@ -51,11 +53,12 @@ h1 {
   height: 2.5rem;
   text-align: center;
   padding: 6px 0;
-  background-color: #FFAA4C;
+  /* background-color: #FFAA4C; */
+  background: #353f5a;
 }
 
 h5 {
-  color: #363636;
+  color: #fff;
   /*Center align h5 text*/
   margin: 6px auto 6px auto;
 }
@@ -146,7 +149,7 @@ button {
   left: 9px;
   width: 150px;
   height: 225px;
-  border: 2px solid black;
+  /* border: 2px solid black; */
   border-radius: 8%;
   box-shadow: 3px 1px 1px 1px rgba(0,0,0,0.2);
 }
@@ -162,7 +165,7 @@ button {
   right: 9px;
   width: 150px;
   height: 225px;
-  border: 2px solid black;
+  /* border: 2px solid black; */
   border-radius: 8%;
   box-shadow: -3px -1px 1px 1px rgba(0,0,0,0.2);
 }
@@ -172,6 +175,9 @@ button {
 
 /********Tie Pot********/
 .tie-pot {
+  font-weight: bold;
+  text-align: center;
+  color: #353f5a;
   position: absolute;
   top: 35%;
   left: 2%;
@@ -193,7 +199,7 @@ button {
 
 /* Centered text */
 .tie-pot-centered {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: bold;
   position: absolute;
   top: 50%;
@@ -290,6 +296,8 @@ button {
 
 .ui {
   font-size: 1.8rem;
+  /* color: #5e709e; */
+  color: #fff;
 }
 
 .ui-computer {
@@ -297,7 +305,7 @@ button {
   display: block;
   border: 1px dashed red;
   /* background-color: red; */
-  padding: 1px 0;
+  margin-top: 3px;
 }
 
 .ui-player {

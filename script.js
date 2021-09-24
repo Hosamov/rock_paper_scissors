@@ -70,6 +70,7 @@ function dealCards(newDeck) {
   // Pass starting cards to P1 & P2
   runGameInstance(p1[currentCard], p2[currentCard]);
   currentCard++;
+  console.log(p1.length, p2.length);
   uiHandler(p1, p2); //send array data to ui handler
 }
 
@@ -327,4 +328,4 @@ function cardImageHandler(card) {
 //TODO: Fix end game, where a blank card displays under the message overlay...
 
 // Start game:
-createDeck(2); // 9, 12, 18
+createDeck(8); // 8, 12, 18
