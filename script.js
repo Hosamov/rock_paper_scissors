@@ -3,6 +3,7 @@ import devices from './gameLogic.js';
 //DOM Element targets:
 const container = document.getElementById('container');
 const playArea = document.getElementById('play-area');
+const instructions = document.getElementById('instructions');
 const uiPlayer = document.querySelector('.ui-player');
 const playerScore = document.getElementById('player-score');
 const aiScore = document.getElementById('ai-score');
@@ -22,6 +23,17 @@ let tieArr = []; // Array to keep track of tied cards
 let [p1, p2] = playerDecks; // p1 = human player, p2 = ai player
 let cardFlipped = false; // Globally track whether card is flipped
 let currentCard = 0; // Iterator for current card index
+
+instructions.addEventListener('click', () => {
+  alert('clicked');
+});
+
+//TODO: Add game instructions prior to game start
+//TODO: Add click handler for player to start a new game (shuffle deck)
+function instructionsMessage() {
+  addMessage('testing instructionsMessage() function', 'shuffle deck');
+}
+// instructionsMessage();
 
 /*
 * Function to create a new deck with 18, 36, or 54 cards
@@ -350,8 +362,6 @@ function cardImageHandler(card) {
 }
 
 
-//TODO: Add game instructions prior to game start
-//TODO: Add click handler for player to start a new game (shuffle deck)
 
 // Start game instance:
 createDeck(deckSize);
