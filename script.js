@@ -1,7 +1,10 @@
-import devices from './gameLogic.js';
+import devices from './gameLogic.js'; // TODO: Change filename to cardData.js
 
+
+// TODO: Check global var calls, move to local vars if necessary.
 //DOM Element targets:
 const container = document.getElementById('container');
+const contentWrap = document.getElementById('content-wrap');
 const playArea = document.getElementById('play-area');
 const instructions = document.getElementById('instructions');
 const uiPlayer = document.querySelector('.ui-player');
@@ -25,15 +28,59 @@ let cardFlipped = false; // Globally track whether card is flipped
 let currentCard = 0; // Iterator for current card index
 
 instructions.addEventListener('click', () => {
-  alert('clicked');
+  instructionsMessage();
 });
 
 //TODO: Add game instructions prior to game start
 //TODO: Add click handler for player to start a new game (shuffle deck)
 function instructionsMessage() {
-  addMessage('testing instructionsMessage() function', 'shuffle deck');
+  contentWrap.insertAdjacentHTML('beforeend', `
+  <div id="info-container" class="info-container">
+    <h2>Rock Paper Scissors</h2>
+    <h4>v1.0</h4>
+    <hr>
+    <p>How many cards should be in your deck? </p>
+    <button class="btn btn-deck" value="18">18</button>
+    <button class="btn btn-deck" value="36">36</button>
+    <button class="btn btn-deck" value="54">54</button>
+    <br>
+    <h4 class="deck-count">${deckSize} cards</h4>
+
+    <button class="btn btn-shuffle-deck">Shuffle Deck (start game)</button>
+    <hr>
+
+    <h3>How the game works:</h3>
+    <p>Start the game initially by shuffling the deck of cards.</p>
+    <p>Two cards are added to the play area facing down.</p>
+    <p>Note: AI's is the top card; Player's is the bottom card.</p>
+    <p>Player must click/tap the bottom card to flip the cards over.</p>
+    <p>The player with the higher card takes both cards (both cards are automatically given to the winner of the round) </p>
+    <p>Playing continues until one player wins the "battle".</p>
+    <br>
+    <h4>A note on tie rounds</h4>
+    <p>When two drawn cards match, the cards will be automatically added to the tie pot.</p>
+    <p>The tie pot will be awarded to the next winning player.</p>
+    <p>If a tie occurs when a player has 1 card remaining, the player with the most cards is awarded the tie pot and hence that player wins the battle.</p>
+
+    <hr>
+
+    <p>Designed by: Matt Coale (<a href="https://backyarddev.io" target="_blank">https://backyarddev.io</a>)
+    and Sally Coale (<a href="https://www.sallyscraftstudio.com" target="_blank">https://www.sallyscraftstudio.com</a>).</p>
+  </div>
+  `);
+
+  const deckCount = document.querySelector('.deck-count');
+  const btnDeck = document.querySelectorAll('.btn-deck');
+  btnDeck.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      deckSize = e.target.value;
+      deckCount.innerText = `${deckSize} cards`;
+    });
+  });
 }
-// instructionsMessage();
+
+// TODO: Style shuffle deck button...
+// TODO: Show message upon game start
 
 /*
 * Function to create a new deck with 18, 36, or 54 cards
@@ -101,7 +148,9 @@ function addUpdateCard(p1ImageFront, p2ImageFront) { //classes: ai-card, player-
   playArea.innerHTML = ''; //Clear the play area of existing cards
 
   (!cardFlipped) ?
-  // Initially display back of card:
+  // Display back of card by default:
+
+  // TODO: Condense code, if possible.
   playArea.insertAdjacentHTML('beforeend', `
     <div class="ai-card">
       <img src="${cardImageBack}">
@@ -118,6 +167,7 @@ function addUpdateCard(p1ImageFront, p2ImageFront) { //classes: ai-card, player-
       <img src="${p1ImageFront}">
     </div>
   `);
+  // TODO: Can cardFlipped be localized?
   cardFlipped = false; // Set global variable back to false for future reuse.
 }
 
@@ -128,6 +178,8 @@ function addUpdateCard(p1ImageFront, p2ImageFront) { //classes: ai-card, player-
 * @param  {String} btnText  Text for btnEl
 * @param  {String} state    For determining button state
 */
+
+// TODO: Assess state param - see if it's necessary
 function addMessage(message, btnText, state) {
   container.insertAdjacentHTML('beforeend', `
     <div id="message" class="message">
@@ -164,6 +216,8 @@ function drawCard(hasWon) {
   setTimeout(() => {
     // Animate card styles based on P1 win/lose/tie state:
     if(hasWon === true && hasWon !== null) {
+
+      // TODO: Create helper function to reduce DRY:
       playerCard.classList.add('win');
       aiCard.classList.add('lose');
     } else if(hasWon === false) {
@@ -209,6 +263,7 @@ function runGameInstance(p1Card, p2Card) {
 
   // Perform following logic once game area has been clicked on:
   playerCard.addEventListener('click', () => {
+    // TODO: Can cardFlipped be localized?
     cardFlipped = true;
     addUpdateCard(cardImageHandler(p1Card), cardImageHandler(p2Card)); //flip cards over
 
@@ -216,6 +271,8 @@ function runGameInstance(p1Card, p2Card) {
     devices.forEach(device => {
       if (p1Card === device.device) {
         if (p2Card === device.win) {
+
+          // TODO: Create new handler to help with DRY:
           drawCard(true); // Win
           tieResult('win', 'lose');
           tieWinHandler(p1);

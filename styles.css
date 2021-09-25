@@ -28,33 +28,23 @@ h1 {
   padding: 8px;
 }
 
-.container {
-  position: relative;
-  min-height: 100vh;
-  display: block;
-  height: auto;
-  background-color: #8492b5;
-  margin: 0;
+hr {
+  border: dotted #EAF6F6 6px;
+  border-bottom: none;
+  width: 50%;
+  margin: 3% auto;
 }
 
-.content-wrap {
-  position: absolute;
-  /* background-color: red; */
-  width: 100vw;
-  left: 0;
-  top: 0;
-  bottom: 20px;
+a {
+  color: #fff;
 }
 
-.footer {
-  position: absolute;
-  bottom: 35px;
-  width: 100%;
-  height: 2.5rem;
-  text-align: center;
-  padding: 6px 0;
-  /* background-color: #FFAA4C; */
-  background: #353f5a;
+a:visited {
+  color: #f1f1f1;
+}
+
+a:hover {
+  color: #dfdfdf;
 }
 
 h5 {
@@ -68,21 +58,70 @@ img {
 }
 
 button {
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid #fff;
+}
+
+.btn {
+  background-color: #8492b5;
+  color: #fff;
   box-shadow: 3px 1px 1px rgba(0,0,0,0.2);
+  transform: scale(1.5);
+  margin: 10px;
+}
+
+.btn:active {
+  background-color: #353f5a;
+}
+
+.btn-shuffle-deck {
+  padding: 6px;
+}
+
+.container {
+  position: relative;
+  min-height: 100vh;
+  display: block;
+  height: auto;
+  background-color: #8492b5;
+  margin: 0;
+}
+
+.content-wrap {
+  position: absolute;
+  width: 100vw;
+  left: 0;
+  top: 0;
+  bottom: 20px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 35px;
+  width: 100%;
+  height: 2.5rem;
+  text-align: center;
+  padding: 6px 0;
+  background: #353f5a;
+  z-index: 101;
 }
 
 .info-container {
-  position: relative;
-  min-height: 100vh;
-  width: auto;
-  background-color: #8492b5;
+  text-align: center;
   color: #fff;
-  opacity: 0;
-  z-index: 1000;
-}
-
-.info-container.visible {
-  opacity: 1;
+  font-size: 1.5rem;
+  position: absolute;
+  width: 80%;
+  left: 10%;
+  top: 4%;
+  right: 10%;
+  bottom: 10%;
+  bottom: 20%;
+  z-index: 100;
+  background-color: #353f5a;
+  border: dashed 3px #fff;
+  overflow-y: auto;
 }
 
 .play-area {
@@ -432,6 +471,11 @@ button {
   }
 }
 
+@media (max-width: 480px) {
+  a {
+    font-size: .9rem;
+  }
+}
 
 @media (max-width: 290px) {
   h1 {
