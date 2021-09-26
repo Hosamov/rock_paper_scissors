@@ -79,6 +79,10 @@ button {
   padding: 6px;
 }
 
+.btn-shuffle-deck.inplay {
+  background-color: gray;
+}
+
 .container {
   position: relative;
   min-height: 100vh;
@@ -112,6 +116,8 @@ button {
   color: #fff;
   font-size: 1.5rem;
   position: absolute;
+  /* transform: translate(-100%, -100%);
+  transition: transform 0.4s ease-in; */
   width: 100%;
   left: 0;
   top: 0;
@@ -123,9 +129,14 @@ button {
   overflow-y: auto;
 }
 
+.info-container.visible {
+  transform: translate(100%, 100%);
+  opacity: 1;
+}
+
 .inner-info-container {
   display: block;
-  background-color: red;
+  /* background-color: red; */
 }
 
 .play-area {
@@ -143,20 +154,18 @@ button {
 }
 
 .instructions {
+  display: fixed;
   position: absolute;
-  top: 2%;
-  right: 14px;
-  color: #fff;
-}
-
-.fa-info-circle {
   transform: scale(2);
-  opacity: 0.5;
+  top: 3%;
+  right: 2%;
+  color: #fff;
+  opacity: 1;
+  z-index: 1000;
 }
 
-.fa-info-circle:hover {
-  opacity: 1;
-  cursor: pointer;
+.instructions:hover {
+  opacity: 0.5;
 }
 
 /***********Message Styles************/
