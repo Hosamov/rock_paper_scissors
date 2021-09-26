@@ -12,27 +12,27 @@ body {
   overflow: hidden;
 }
 
-.header {
-  /* background-color: #001E6C; */
-  background-color: #353f5a;
-  color: #fff;
-  display: block;
-  text-align: center;
-  padding-top: 5px;
-  /* background-color: blue; */
-}
-
 h1 {
-  /*Center align h1 text*/
-  margin: 3px auto auto auto;
+  margin: 3px auto auto auto; /*Center align h1 text*/
   padding: 8px;
 }
 
+h3 {
+  padding-top: 15px;
+  margin: 0;
+}
+
+h5 {
+  color: #fff;
+  margin: 6px auto 6px auto;   /*Center align h5 text*/
+}
+
 hr {
-  border: dotted #EAF6F6 6px;
-  border-bottom: none;
+  position: relative;
+  border: 0;
+  border-top: 6px dotted #EAF6F6;
   width: 50%;
-  margin: 3% auto;
+  padding: 3% auto;
 }
 
 a {
@@ -47,12 +47,6 @@ a:hover {
   color: #dfdfdf;
 }
 
-h5 {
-  color: #fff;
-  /*Center align h5 text*/
-  margin: 6px auto 6px auto;
-}
-
 img {
   object-fit: contain;
 }
@@ -63,6 +57,28 @@ button {
   border: 1px solid #fff;
 }
 
+.header {
+  background-color: #353f5a;
+  border-bottom: solid 3px #fff;
+  color: #fff;
+  display: block;
+  text-align: center;
+  padding-top: 5px;
+}
+
+.footer {
+  position: absolute;
+  border-top: solid 3px #fff;
+  bottom: 35px;
+  width: 100%;
+  height: 2.5rem;
+  text-align: center;
+  padding: 6px 0;
+  background: #353f5a;
+  z-index: 101;
+}
+
+/* Class of .btn:*/
 .btn {
   background-color: #353f5a;
   color: #fff;
@@ -75,6 +91,10 @@ button {
   background-color: #8492b5;
 }
 
+.btn-deck.active {
+  background-color: #8492b5;
+}
+
 .btn-shuffle-deck {
   padding: 6px;
 }
@@ -84,6 +104,7 @@ button {
 }
 
 .container {
+  overflow-y: hidden; /* Fix mobile browsers from using overflow */
   position: relative;
   min-height: 100vh;
   display: block;
@@ -100,31 +121,17 @@ button {
   bottom: 20px;
 }
 
-.footer {
-  position: absolute;
-  bottom: 35px;
-  width: 100%;
-  height: 2.5rem;
-  text-align: center;
-  padding: 6px 0;
-  background: #353f5a;
-  z-index: 101;
-}
-
 .info-container {
   text-align: center;
   color: #fff;
   font-size: 1.5rem;
   position: absolute;
-  /* transform: translate(-100%, -100%);
-  transition: transform 0.4s ease-in; */
   width: 100%;
   left: 0;
   top: 0;
-  bottom: 60px;
+  bottom: 65px;
   z-index: 100;
   background-color: #8492b5;
-  border: solid 3px #fff;
   border-radius: 8px;
   overflow-y: auto;
 }
@@ -134,9 +141,24 @@ button {
   opacity: 1;
 }
 
-.inner-info-container {
+.game-setup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  margin: 0;
+}
+
+.pulsing-text {
+  transform: scale(1);
+  animation: pulse 2s infinite;
+}
+
+.game-instructions {
   display: block;
-  /* background-color: red; */
+  height: 100%;
+  margin: 0;
 }
 
 .play-area {
@@ -157,8 +179,8 @@ button {
   display: fixed;
   position: absolute;
   transform: scale(2);
-  top: 3%;
-  right: 2%;
+  top: 15px;
+  right: 28px;
   color: #fff;
   opacity: 1;
   z-index: 1000;
@@ -191,26 +213,6 @@ button {
   opacity: 1;
 }
 
-.message button {
-  border: #fff solid;
-  color: #fff;
-  cursor: pointer;
-  width: auto;
-  height: 50px;
-  background-color: #001E6C;
-  font-size: 1.2rem;
-  font-weight: bold;
-  border-radius: 8px;
-}
-
-.message button:active {
-  background-color: #e67900;
-  /* color: #6e6e6e; */
-  /* box-shadow: 0 5px #666; */
-  transform: translateY(2px);
-  outline: none;
-}
-
 /******Player/AI Cards*******/
 .player-card {
   margin-top: 20px;
@@ -231,7 +233,6 @@ button {
   left: 9px;
   width: 150px;
   height: 225px;
-  /* border: 2px solid black; */
   border-radius: 8%;
   box-shadow: 3px 1px 1px 1px rgba(0,0,0,0.2);
 }
@@ -247,13 +248,9 @@ button {
   right: 9px;
   width: 150px;
   height: 225px;
-  /* border: 2px solid black; */
   border-radius: 8%;
   box-shadow: -3px -1px 1px 1px rgba(0,0,0,0.2);
 }
-
-/******Card Flips*******/
-
 
 /********Tie Pot********/
 .tie-pot {
@@ -292,7 +289,7 @@ button {
   opacity: 0;
 }
 
-/* Centered text */
+/* Centered text in tie pot image */
 .tie-pot-centered {
   font-size: 2rem;
   font-weight: bold;
@@ -306,7 +303,6 @@ button {
 /*When player wins:*/
 .player-card.win img {
   border-color: blue;
-  /*Animate to bottom left*/
   transition: transform 1s ease-in;
   transform: translate(-400%, 80%) scale(0.0);
 }
@@ -322,49 +318,39 @@ button {
 /************LOSE*************/
 /*When player loses to AI:*/
 .player-card.lose img {
-  /*Animate to top left*/
-  border-color: red;
   transition: transform 1s ease-in;
-  transform: translate(-400%, -175%) scale(0.0);
+  transform: translate(-400%, -175%) scale(0.0);   /*Animate to top left*/
 }
 
 /*When AI loses to player:*/
 .ai-card.lose img {
-  /*Animate to bottom left*/
-  border-color: blue;
   transition: transform 1s ease-in;
-  transform: translate(400%, -175%) scale(0.0);
+  transform: translate(400%, -175%) scale(0.0); /*Animate to bottom left*/
 }
 
 /************TIE*************/
 /*When player card ties with AI:*/
 .player-card.tie img {
-  border-color: purple;
   transition: transform 1s ease-in;
   transform: translate(-400%, -38%) scale(0);
 }
 
 /*When AI card ties with player:*/
 .ai-card.tie img {
-  border-color: purple;
   transition: transform 1s ease-in;
   transform: translate(400%, -38%) scale(0);
 }
 
 /*****************WIN TIE animations******************/
 
-/* TODO: Have these cards now disperse from tie pot */
-
 .player-tie.win img {
   position: absolute;
-  border: 2px dashed blue;
   transition: transform .6s ease-in;
   transform: translate(-1000%, 0%) scale(0);
 }
 
 .ai-tie.win img {
   position: absolute;
-  border: 2px dashed red;
   transition: transform .6s ease-in;
   transform: translate(-1000%, 0%) scale(0);
 }
@@ -372,14 +358,12 @@ button {
 /*****************LOSE TIE animations******************/
 .player-tie.lose img {
   position: absolute;
-  border: 2px dashed red;
   transition: transform .6s ease-in;
   transform: translate(-1000%, -1000%) scale(0);
 }
 
 .ai-tie.lose img {
   position: absolute;
-  border: 2px dashed blue;
   transition: transform .6s ease-in;
   transform: translate(-1000%, 1000%) scale(0);
 }
@@ -391,25 +375,24 @@ button {
 
 .ui {
   font-size: 1.8rem;
-  /* color: #5e709e; */
   color: #fff;
+  left: 8px;
 }
 
 .ui-computer {
   position: absolute;
   display: block;
-  /* background-color: red; */
-  margin-top: 3px;
+  top: 8px;
 }
 
 .ui-player {
   position: absolute;
   display: block;
-  /* background-color: blue; */
   padding: 3px 0;
   bottom: 70px;
 }
 
+/* Code for scrollbar in information window: */
 /* width */
 ::-webkit-scrollbar {
   width: 18px;
@@ -516,4 +499,19 @@ button {
   h1 {
     font-size: 1.7rem;
   }
+}
+
+/*Animate pulse effect*/
+@keyframes pulse {
+	0% {
+		transform: scale(0.95);
+	}
+
+	70% {
+		transform: scale(1.1);
+	}
+
+	100% {
+		transform: scale(0.95);
+	}
 }

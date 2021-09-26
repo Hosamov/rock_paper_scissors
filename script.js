@@ -19,38 +19,37 @@ let tieArr = []; // Array to keep track of tied cards
 let cardFlipped = false; // Globally track whether card is flipped
 let currentCard = 0; // index of current card in player's deck
 
-// const faGamepad = document.querySelector('.fa-gamepad').classList.add('invisible');
-
-instructions.addEventListener('click', () => {
-  handleFAIcon();
-});
-
-//TODO: Add click handler for player to start a new game (shuffle deck)
+/*
+* Function to display the main game menu/information div
+*/
 function infoMessage() {
-  infoContainer.classList.toggle('visible');
-
   const deckCount = document.querySelector('.deck-count');
   const btnDeck = document.querySelectorAll('.btn-deck');
   const btnShuffleDeck = document.querySelector('.btn-shuffle-deck');
+
+  infoContainer.classList.toggle('visible');
+
+  // Iterate through buttons, change card value and add active class to selected button
   btnDeck.forEach(btn => {
     btn.addEventListener('click', (e) => {
+      // Iterate through btnDeck, remove active class for appending to new btn
+      for(let i = 0; i < btnDeck.length; i++) btnDeck[i].classList.remove('active');
+
       deckSize = e.target.value;
-      deckCount.innerText = `${deckSize} cards`;
+      deckCount.innerText = `${deckSize} cards`; // Display deck size to user
+      btn.classList.add('active');
     });
   });
 
+  // Click handler for the Start Game button:
   btnShuffleDeck.addEventListener('click', () => {
-    // Start game instance:
-    createDeck(deckSize, true);
-    btnShuffleDeck.classList.add('inplay');
+    console.log('Shuffling deck and starting a new game...');
+    gameStart = false;
+    // Start new game instance:
+    createDeck(deckSize, true); // (Chosen deck size, is new game instance)
     handleFAIcon();
   });
 }
-
-infoMessage();
-
-// TODO: Style shuffle deck button...
-// TODO: Show message upon game start
 
 /*
 * Function to create a new deck with 18, 36, or 54 cards
@@ -64,6 +63,7 @@ function createDeck(num, gameReset) {
     [p1, p2] = playerDecks;
     tieArr = [];
     currentCard = 0;
+    tiePot.classList.remove('active');
   }
 
   const splitNum = (num / 3);
@@ -126,7 +126,6 @@ function addUpdateCard(p1ImageFront, p2ImageFront) { //classes: ai-card, player-
       <img src="${!cardFlipped ? cardImageBack : p1ImageFront}">
     </div>
   `);
-
   cardFlipped = false; // Reset global var for reuse
 }
 
@@ -135,33 +134,29 @@ function addUpdateCard(p1ImageFront, p2ImageFront) { //classes: ai-card, player-
 * action button.
 * @param  {String} message  Win/lose message
 * @param  {String} btnText  Text for btnEl
-* @param  {String} state    For determining button state
 */
-
-// TODO: Assess state param - see if it's necessary
-function addMessage(message, btnText, state) {
+function addMessage(message, btnText) {
   const container = document.getElementById('container');
   container.insertAdjacentHTML('beforeend', `
     <div id="message" class="message">
       <h4>${message}</h4>
-      <button id="action-button">${btnText}</button>
+      <button id="action-button" class="btn">${btnText}</button>
     </div>
   `);
 
   const btnEl = document.getElementById('action-button');
   const messageEl = document.getElementById('message');
-  setTimeout(() => messageEl.classList.add('visible'), 1000);
 
-  // Add button functionality:
-  // Allow for additional message blocks, when necessary
-  if(state === 'shuffle') { // End of game
+  // Note: Programmed it this way to allow for future expansion
+  setTimeout(() => messageEl.classList.add('visible'), 1000);
+    // Add button functionality:
     btnEl.innerText = btnText;
     btnEl.addEventListener('click', () => {
-      setTimeout(() => createDeck(8, true), 2000);
-      console.log('Called "Play again"');
-      container.lastElementChild.remove(); //remove message container
+      setTimeout(() => {
+        location.reload(); // Page refresh to reload
+      }, 2000);
+      container.lastElementChild.remove(); //remove message container from display
     });
-  }
 }
 
 /*
@@ -169,29 +164,20 @@ function addMessage(message, btnText, state) {
 * @param  {Boolean} hasWon  State of win/lose for round
 */
 function drawCard(hasWon) {
-  // Declare variables for elements needed
-  const playerCard = document.querySelector('.player-card');
-  const aiCard = document.querySelector('.ai-card');
-
   setTimeout(() => {
     // Animate card styles based on P1 win/lose/tie state:
     if(hasWon === true && hasWon !== null) {
-
-      // TODO: Create helper function to reduce DRY:
-      playerCard.classList.add('win');
-      aiCard.classList.add('lose');
+      winLoseTieHandler('win', 'lose');
     } else if(hasWon === false) {
-      playerCard.classList.add('lose');
-      aiCard.classList.add('win');
+      winLoseTieHandler('lose', 'win');
     } else {
-      playerCard.classList.add('tie');
-      aiCard.classList.add('tie');
+      winLoseTieHandler('tie', 'tie');
     }
   }, 2000); // 2s
 
   // Clear play area, draw new cards:
   setTimeout(() => {
-    if (hasWon) playArea.innerHTML = '';
+    if (hasWon) playArea.innerHTML = ''; // Reset play area
 
     // Ensure there are still cards before resetting index:
     if(p1[currentCard] === undefined || p2[currentCard] === undefined) {
@@ -223,7 +209,6 @@ function runGameInstance(p1Card, p2Card) {
 
   // Perform following logic once game area has been clicked on:
   playerCard.addEventListener('click', () => {
-    // TODO: Can cardFlipped be localized?
     cardFlipped = true;
     addUpdateCard(cardImageHandler(p1Card), cardImageHandler(p2Card)); //flip cards over
 
@@ -231,19 +216,13 @@ function runGameInstance(p1Card, p2Card) {
     devices.forEach(device => {
       if (p1Card === device.device) {
         if (p2Card === device.win) {
-
-          // TODO: Create new handler to help with DRY:
-          drawCard(true); // Win
-          tieResult('win', 'lose');
-          tieWinHandler(p1);
+          deviceUpdateHandler(true, 'win', 'lose', p1);
           gameUpdateHandler(p1, p2, device.device, device.win);
         } else if (p2Card === device.lose) {
-          drawCard(false); // Lose
-          tieResult('lose', 'win');
-          tieWinHandler(p2);
+          deviceUpdateHandler(false, 'lose', 'win', p2);
           gameUpdateHandler(p2, p1, device.device); // Note: P2 takes only 3 args (as opposed to 4 for P1)
         } else { // Tie round: Begin War...
-          drawCard(); // Null
+          drawCard(); // Arg: NULL
           tieArr.push(p1Card, p2Card); // Place tied cards into their own array
 
           // Shuffle both P1 & P2 decks to add randomness after > 4 cards in tie pot
@@ -252,7 +231,6 @@ function runGameInstance(p1Card, p2Card) {
             shuffleDeck(p1);
             shuffleDeck(p2);
           }
-
           // Remove both P1 & P2's tied cards from their hands temporarily:
           p1.shift(0);
           p2.shift(0);
@@ -289,11 +267,11 @@ function endGame() {
   setTimeout(() => {
     playArea.innerHTML = '';
     if(p1.length === 0 && p2.length > 0) {
-      return addMessage('Game over. Better luck next time.', 'Shuffle and Play Again', 'shuffle');
+      return addMessage('Game over. Better luck next time.', 'Play Again', 'shuffle');
     } else if (p1.length > 0 && p2.length === 0) {
-      return addMessage('Congratulations...You win!', 'Shuffle and Play Again', 'shuffle');
+      return addMessage('Congratulations...You win!', 'Play Again', 'shuffle');
     } else {
-      return addMessage('Tie game.', 'Shuffle and Play Again', 'shuffle');
+      return addMessage('Tie game.', 'Play Again', 'shuffle');
     }
   }, 2000); // 2s
 }
@@ -301,7 +279,22 @@ function endGame() {
 
 ////HELPER FUNCTIONS////
 
-// Display current cards per player:
+// Function to animate Win/Lose/Tie state:
+function winLoseTieHandler(p1State, p2State) {
+  const playerCard = document.querySelector('.player-card');
+  const aiCard = document.querySelector('.ai-card');
+  playerCard.classList.add(p1State);
+  aiCard.classList.add(p2State);
+}
+
+// Helper function to call main functions from within runGameInstance():
+function deviceUpdateHandler(bool, res1, res2, tieWinner) {
+  drawCard(bool);
+  tieResult(res1, res2);
+  tieWinHandler(tieWinner);
+}
+
+// Helper function to display current cards per player:
 function uiHandler() {
   const playerScore = document.getElementById('player-score');
   const aiScore = document.getElementById('ai-score');
@@ -325,7 +318,7 @@ function tieResult(class1, class2) {
   setTimeout(() => clearTiePot(), 2000);
 }
 
-// Function to reset tie pot DOM elements:
+// Helper function to reset tie pot DOM elements after tie has been won:
 function clearTiePot() {
   winTiePotAnimation();
   uiHandler();
@@ -353,19 +346,18 @@ function winTiePotAnimation() {
 
 // Change information icon based on visible state of information window
 function handleFAIcon() {
-  if(gameStart) {
+  // If the game is just starting, dont' display an icon:
+  if(gameStart === true) {
     instructions.innerHTML = ``;
     infoMessage();
-    console.log(gameStart);
-    gameStart = false;
   } else {
-    if(infoContainer.classList.contains('visible')) {
-      instructions.innerHTML = `<i class="fas fa-gamepad"></i>`;
-    } else {
+    // Otherwise, display the applicable information or gamepad FontAwesome icon:
+    if(!infoContainer.classList.contains('visible')) {
       instructions.innerHTML = `<i class="fas fa-info-circle"></i>`;
+    } else {
+      instructions.innerHTML = `<i class="fas fa-gamepad"></i>`;
     }
     infoMessage();
-    console.log(gameStart);
   }
 
 }
@@ -398,3 +390,11 @@ function cardImageHandler(card) {
     }
   }
 }
+
+// Click handler for information button:
+instructions.addEventListener('click', () => {
+  handleFAIcon();
+});
+
+// Show info screen upon game start:
+infoMessage();
