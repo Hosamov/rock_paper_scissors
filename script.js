@@ -1,31 +1,21 @@
-import devices from './gameLogic.js'; // TODO: Change filename to cardData.js
+import devices from './cardData.js';
 
-
-// TODO: Check global var calls, move to local vars if necessary.
-//DOM Element targets:
-const container = document.getElementById('container');
-const contentWrap = document.getElementById('content-wrap');
+// Target global DOM Elements:
 const playArea = document.getElementById('play-area');
 const instructions = document.getElementById('instructions');
-const uiPlayer = document.querySelector('.ui-player');
-const playerScore = document.getElementById('player-score');
-const aiScore = document.getElementById('ai-score');
 const playerTie = document.getElementById('player-tie');
 const aiTie = document.getElementById('ai-tie');
 const tiePot = document.getElementById('tie-pot');
-const tiePotCentered = document.querySelector('.tie-pot-centered');
 const tiePotText = document.querySelector('.tie-pot-centered');
-const uiComputer = document.querySelector('.ui-computer');
 
-//Declare global variables needed:
-const cardImageBack = './images/card_back.png';
-let deckSize = 18; // 18, 36, 54
-let newDeck = []; //init newDeck var to hold all card values before dispersing
+//Declare needed global variables needed:
+let deckSize = 18; // initial value (18, 36, 54)
+let newDeck = []; //init newDeck to hold all card values before dealing
 let playerDecks = [ [],[] ];
-let tieArr = []; // Array to keep track of tied cards
 let [p1, p2] = playerDecks; // p1 = human player, p2 = ai player
+let tieArr = []; // Array to keep track of tied cards
 let cardFlipped = false; // Globally track whether card is flipped
-let currentCard = 0; // Iterator for current card index
+let currentCard = 0; // index of current card in player's deck
 
 instructions.addEventListener('click', () => {
   instructionsMessage();
@@ -34,10 +24,14 @@ instructions.addEventListener('click', () => {
 //TODO: Add game instructions prior to game start
 //TODO: Add click handler for player to start a new game (shuffle deck)
 function instructionsMessage() {
+  const contentWrap = document.getElementById('content-wrap');
   contentWrap.insertAdjacentHTML('beforeend', `
   <div id="info-container" class="info-container">
-    <h2>Rock Paper Scissors</h2>
-    <h4>v1.0</h4>
+
+    <div class="inner-info-container">
+      <h2>Rock Paper Scissors</h2>
+      <h4>v1.0</h4>
+    </div>
     <hr>
     <p>How many cards should be in your deck? </p>
     <button class="btn btn-deck" value="18">18</button>
@@ -45,8 +39,8 @@ function instructionsMessage() {
     <button class="btn btn-deck" value="54">54</button>
     <br>
     <h4 class="deck-count">${deckSize} cards</h4>
-
     <button class="btn btn-shuffle-deck">Shuffle Deck (start game)</button>
+
     <hr>
 
     <h3>How the game works:</h3>
@@ -142,33 +136,22 @@ function dealCards(newDeck) {
 * Function that adds two cards (from p1 and p2's deck) to the display.
 * @param {String} p1ImageFront  Card image for P1
 * @param {String} p2ImageFront  Card image for P2
-* return Insert HTML
 */
 function addUpdateCard(p1ImageFront, p2ImageFront) { //classes: ai-card, player-card
+  const cardImageBack = './images/card_back.png';
   playArea.innerHTML = ''; //Clear the play area of existing cards
 
-  (!cardFlipped) ?
-  // Display back of card by default:
-
-  // TODO: Condense code, if possible.
+  // Display back of card until cardFlipped:
   playArea.insertAdjacentHTML('beforeend', `
     <div class="ai-card">
-      <img src="${cardImageBack}">
+      <img src="${!cardFlipped ? cardImageBack : p2ImageFront}">
     </div>
     <div class="player-card">
-      <img src="${cardImageBack}">
-    </div>
-  `):
-    playArea.insertAdjacentHTML('beforeend', `
-    <div class="ai-card">
-      <img src="${p2ImageFront}">
-    </div>
-    <div class="player-card played">
-      <img src="${p1ImageFront}">
+      <img src="${!cardFlipped ? cardImageBack : p1ImageFront}">
     </div>
   `);
-  // TODO: Can cardFlipped be localized?
-  cardFlipped = false; // Set global variable back to false for future reuse.
+
+  cardFlipped = false; // Reset global var for reuse
 }
 
 /*
@@ -181,6 +164,7 @@ function addUpdateCard(p1ImageFront, p2ImageFront) { //classes: ai-card, player-
 
 // TODO: Assess state param - see if it's necessary
 function addMessage(message, btnText, state) {
+  const container = document.getElementById('container');
   container.insertAdjacentHTML('beforeend', `
     <div id="message" class="message">
       <h4>${message}</h4>
@@ -343,6 +327,8 @@ function endGame() {
 
 // Display current cards per player:
 function uiHandler() {
+  const playerScore = document.getElementById('player-score');
+  const aiScore = document.getElementById('ai-score');
   aiScore.innerHTML = `<i class="fas fa-desktop"></i> AI: ${p2.length} cards`;
   playerScore.innerHTML = `<i class="fas fa-user"></i> Player: ${p1.length} cards`;
 }

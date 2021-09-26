@@ -64,7 +64,7 @@ button {
 }
 
 .btn {
-  background-color: #8492b5;
+  background-color: #353f5a;
   color: #fff;
   box-shadow: 3px 1px 1px rgba(0,0,0,0.2);
   transform: scale(1.5);
@@ -72,7 +72,7 @@ button {
 }
 
 .btn:active {
-  background-color: #353f5a;
+  background-color: #8492b5;
 }
 
 .btn-shuffle-deck {
@@ -112,16 +112,20 @@ button {
   color: #fff;
   font-size: 1.5rem;
   position: absolute;
-  width: 80%;
-  left: 10%;
-  top: 4%;
-  right: 10%;
-  bottom: 10%;
-  bottom: 20%;
+  width: 100%;
+  left: 0;
+  top: 0;
+  bottom: 60px;
   z-index: 100;
-  background-color: #353f5a;
-  border: dashed 3px #fff;
+  background-color: #8492b5;
+  border: solid 3px #fff;
+  border-radius: 8px;
   overflow-y: auto;
+}
+
+.inner-info-container {
+  display: block;
+  background-color: red;
 }
 
 .play-area {
@@ -395,6 +399,28 @@ button {
   /* background-color: blue; */
   padding: 3px 0;
   bottom: 70px;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 18px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #5e709e;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #353f5a;
 }
 
 @media (max-height: 1368px) {
