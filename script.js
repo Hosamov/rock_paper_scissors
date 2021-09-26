@@ -7,8 +7,10 @@ const playerTie = document.getElementById('player-tie');
 const aiTie = document.getElementById('ai-tie');
 const tiePot = document.getElementById('tie-pot');
 const tiePotText = document.querySelector('.tie-pot-centered');
+const infoContainer = document.getElementById('info-container');
 
 //Declare needed global variables needed:
+let gameStart = true;
 let deckSize = 18; // initial value (18, 36, 54)
 let newDeck = []; //init newDeck to hold all card values before dealing
 let playerDecks = [ [],[] ];
@@ -17,61 +19,35 @@ let tieArr = []; // Array to keep track of tied cards
 let cardFlipped = false; // Globally track whether card is flipped
 let currentCard = 0; // index of current card in player's deck
 
+// const faGamepad = document.querySelector('.fa-gamepad').classList.add('invisible');
+
 instructions.addEventListener('click', () => {
-  instructionsMessage();
+  handleFAIcon();
 });
 
-//TODO: Add game instructions prior to game start
 //TODO: Add click handler for player to start a new game (shuffle deck)
-function instructionsMessage() {
-  const contentWrap = document.getElementById('content-wrap');
-  contentWrap.insertAdjacentHTML('beforeend', `
-  <div id="info-container" class="info-container">
-
-    <div class="inner-info-container">
-      <h2>Rock Paper Scissors</h2>
-      <h4>v1.0</h4>
-    </div>
-    <hr>
-    <p>How many cards should be in your deck? </p>
-    <button class="btn btn-deck" value="18">18</button>
-    <button class="btn btn-deck" value="36">36</button>
-    <button class="btn btn-deck" value="54">54</button>
-    <br>
-    <h4 class="deck-count">${deckSize} cards</h4>
-    <button class="btn btn-shuffle-deck">Shuffle Deck (start game)</button>
-
-    <hr>
-
-    <h3>How the game works:</h3>
-    <p>Start the game initially by shuffling the deck of cards.</p>
-    <p>Two cards are added to the play area facing down.</p>
-    <p>Note: AI's is the top card; Player's is the bottom card.</p>
-    <p>Player must click/tap the bottom card to flip the cards over.</p>
-    <p>The player with the higher card takes both cards (both cards are automatically given to the winner of the round) </p>
-    <p>Playing continues until one player wins the "battle".</p>
-    <br>
-    <h4>A note on tie rounds</h4>
-    <p>When two drawn cards match, the cards will be automatically added to the tie pot.</p>
-    <p>The tie pot will be awarded to the next winning player.</p>
-    <p>If a tie occurs when a player has 1 card remaining, the player with the most cards is awarded the tie pot and hence that player wins the battle.</p>
-
-    <hr>
-
-    <p>Designed by: Matt Coale (<a href="https://backyarddev.io" target="_blank">https://backyarddev.io</a>)
-    and Sally Coale (<a href="https://www.sallyscraftstudio.com" target="_blank">https://www.sallyscraftstudio.com</a>).</p>
-  </div>
-  `);
+function infoMessage() {
+  infoContainer.classList.toggle('visible');
 
   const deckCount = document.querySelector('.deck-count');
   const btnDeck = document.querySelectorAll('.btn-deck');
+  const btnShuffleDeck = document.querySelector('.btn-shuffle-deck');
   btnDeck.forEach(btn => {
     btn.addEventListener('click', (e) => {
       deckSize = e.target.value;
       deckCount.innerText = `${deckSize} cards`;
     });
   });
+
+  btnShuffleDeck.addEventListener('click', () => {
+    // Start game instance:
+    createDeck(deckSize, true);
+    btnShuffleDeck.classList.add('inplay');
+    handleFAIcon();
+  });
 }
+
+infoMessage();
 
 // TODO: Style shuffle deck button...
 // TODO: Show message upon game start
@@ -375,6 +351,25 @@ function winTiePotAnimation() {
   }
 }
 
+// Change information icon based on visible state of information window
+function handleFAIcon() {
+  if(gameStart) {
+    instructions.innerHTML = ``;
+    infoMessage();
+    console.log(gameStart);
+    gameStart = false;
+  } else {
+    if(infoContainer.classList.contains('visible')) {
+      instructions.innerHTML = `<i class="fas fa-gamepad"></i>`;
+    } else {
+      instructions.innerHTML = `<i class="fas fa-info-circle"></i>`;
+    }
+    infoMessage();
+    console.log(gameStart);
+  }
+
+}
+
 /*
 * Helper function that takes two player areas and two card values, then
 * adds/removes to/from correct hand:
@@ -403,8 +398,3 @@ function cardImageHandler(card) {
     }
   }
 }
-
-
-
-// Start game instance:
-createDeck(deckSize);
