@@ -344,12 +344,12 @@ function winTiePotAnimation() {
   }
 }
 
-// Change information icon based on visible state of information window
+// Function to change information icon based on visible state of info window
 function handleFAIcon() {
   // If the game is just starting, dont' display an icon:
   if(gameStart === true) {
     instructions.innerHTML = ``;
-    infoMessage();
+    infoMessage(); // Do display info by default
   } else {
     // Otherwise, display the applicable information or gamepad FontAwesome icon:
     if(!infoContainer.classList.contains('visible')) {
@@ -359,11 +359,10 @@ function handleFAIcon() {
     }
     infoMessage();
   }
-
 }
 
 /*
-* Helper function that takes two player areas and two card values, then
+* Helper function that takes two player arrays and two card values, then
 * adds/removes to/from correct hand:
 */
 function gameUpdateHandler(arr1, arr2, card, losingCard) {
@@ -380,7 +379,7 @@ function gameUpdateHandler(arr1, arr2, card, losingCard) {
 /*
  * Helper function to get and return the corresponding device image randomly
  * from list of assets
- * Note: There are 3 (three) total images to display per device (see gameLogic.js)
+ * Note: There are 3 (three) total images to display per device (see cardData.js)
  */
 function cardImageHandler(card) {
   for (let device of devices) {
@@ -390,6 +389,8 @@ function cardImageHandler(card) {
     }
   }
 }
+
+//////////////////////////
 
 // Click handler for information button:
 instructions.addEventListener('click', () => {
