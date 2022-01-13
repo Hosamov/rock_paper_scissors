@@ -90,7 +90,7 @@ function shuffleDeck(array) {
     array[j] = temp;
   }
   return array;
-};
+}
 
 /*
 * Function that evenly distributes randomized decks to each player
